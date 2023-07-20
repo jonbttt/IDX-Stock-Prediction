@@ -33,12 +33,15 @@ body = buffer.getvalue()
 print(body.decode('iso-8859-1'))
 data1 = body.decode('iso-8859-1')
 dict = json.loads(data1)
-dict = dict["data"]
-dict = dict["results"]
-data = pd.DataFrame.from_dict(dict)
-df_train = data[['date', 'close']]
-df_train = df_train.rename(columns={"date": "ds", "close": "y"})
-df_train['floor'] = 0
+try:
+  dict = dict["data"]
+  dict = dict["results"]
+  data = pd.DataFrame.from_dict(dict)
+  df_train = data[['date', 'close']]
+  df_train = df_train.rename(columns={"date": "ds", "close": "y"})
+  df_train['floor'] = 0
+except KeyError:
+  pass
 
 period = st.text_input("How many days ahead?")
 period = int(period)
