@@ -64,5 +64,5 @@ try:
   st.write("Prophet forecast components")
   fig2 = m.plot_components(forecast)
   st.write(fig2)
-except NameError:
+except (NameError, ValueError):
   pass
