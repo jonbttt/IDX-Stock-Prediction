@@ -46,9 +46,7 @@ m.fit(df_train)
 future = m.make_future_dataframe(periods=period)
 forecast = m.predict(future)
 
-period = str(period)
-str1 = 'Forecast for '+period+' days'
-st.write(str1)
+st.write('Forecast')
 fig1 = plot_plotly(m, forecast)
 st.plotly_chart(fig1)
 
