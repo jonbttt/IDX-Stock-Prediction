@@ -50,6 +50,7 @@ forecast = m.predict(future)
 
 st.write('Forecast')
 fig1 = plot_plotly(m, forecast)
+fig1.update_yaxes(rangemode = "nonnegative")
 st.plotly_chart(fig1)
 
 st.write("Prophet forecast components")
