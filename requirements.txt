@@ -1,3 +1,4 @@
+setuptools==67.8.0
 pip==23.2
 pycurl==7.45.2
 certifi==2023.5.7
