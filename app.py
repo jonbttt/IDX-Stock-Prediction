@@ -18,7 +18,6 @@ ticker = st.text_input('Input ticker')
 ticker = str(ticker)
 startdate = st.date_input('Input start date')
 startdate = str(startdate)
-apikey = 'y6q1RZG9GoOeA681EQpBFSgesCuel1'
 #apikey = st.text_input('Input API key')
 today = date.today().strftime("%Y-%m-%d")
 url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
