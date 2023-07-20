@@ -39,7 +39,6 @@ data = pd.DataFrame.from_dict(dict)
 df_train = data[['date', 'close']]
 df_train = df_train.rename(columns={"date": "ds", "close": "y"})
 
-period = 60
 period = st.text_input("How many days ahead?")
 period = int(period)
 m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
