@@ -8,8 +8,6 @@ from datetime import date
 from prophet import Prophet
 from prophet.plot import plot_plotly
 from plotly import graph_objs as go
-import re
-
 
 buffer = BytesIO()
 c = pycurl.Curl()
@@ -47,8 +45,10 @@ m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
 m.fit(df_train)
 future = m.make_future_dataframe(periods=period)
 forecast = m.predict(future)
-    
-st.write('Forecast for'+period+'days')
+
+str1 = 'Forecast for'+period+'days'
+str1 = str(str1)
+st.write(str1)
 fig1 = plot_plotly(m, forecast)
 st.plotly_chart(fig1)
 
