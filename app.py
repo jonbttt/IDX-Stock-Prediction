@@ -48,17 +48,21 @@ try:
   period = int(period)
 except ValueError:
   pass
-m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
-m.fit(df_train)
-future = m.make_future_dataframe(periods=period)
-future['floor'] = 0
-forecast = m.predict(future)
+  
+try:
+  m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
+  m.fit(df_train)
+  future = m.make_future_dataframe(periods=period)
+  future['floor'] = 0
+  forecast = m.predict(future)
 
-st.write('Forecast')
-fig1 = plot_plotly(m, forecast)
-fig1.update_yaxes(rangemode = "nonnegative")
-st.plotly_chart(fig1)
+  st.write('Forecast')
+  fig1 = plot_plotly(m, forecast)
+  fig1.update_yaxes(rangemode = "nonnegative")
+  st.plotly_chart(fig1)
 
-st.write("Prophet forecast components")
-fig2 = m.plot_components(forecast)
-st.write(fig2)
+  st.write("Prophet forecast components")
+  fig2 = m.plot_components(forecast)
+  st.write(fig2)
+except NameError:
+  pass
