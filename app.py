@@ -44,7 +44,10 @@ except KeyError:
   pass
 
 period = st.text_input("How many days ahead?")
-period = int(period)
+try:
+  period = int(period)
+except ValueError:
+  pass
 m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
 m.fit(df_train)
 future = m.make_future_dataframe(periods=period)
