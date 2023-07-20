@@ -47,7 +47,7 @@ future = m.make_future_dataframe(periods=period)
 forecast = m.predict(future)
 
 period = str(period)
-str1 = 'Forecast for'+period+'days'
+str1 = 'Forecast for '+period+' days'
 st.write(str1)
 fig1 = plot_plotly(m, forecast)
 st.plotly_chart(fig1)
