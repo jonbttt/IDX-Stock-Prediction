@@ -38,12 +38,14 @@ dict = dict["results"]
 data = pd.DataFrame.from_dict(dict)
 df_train = data[['date', 'close']]
 df_train = df_train.rename(columns={"date": "ds", "close": "y"})
+df_train['floor'] = 0
 
 period = st.text_input("How many days ahead?")
 period = int(period)
 m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
 m.fit(df_train)
 future = m.make_future_dataframe(periods=period)
+future['floor'] = 0
 forecast = m.predict(future)
 
 st.write('Forecast')
