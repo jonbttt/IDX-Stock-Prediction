@@ -8,18 +8,44 @@ from datetime import date
 from prophet import Prophet
 from prophet.plot import plot_plotly
 from plotly import graph_objs as go
+import re
+
+apikey = st.secrets["apikey"]
+#apikey = st.text_input('Input API key')
 
 buffer = BytesIO()
 c = pycurl.Curl()
 custom_headers = ['User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0/8mqLkJuL-86']
 
 st.title('IDX Stock Prediction')
-ticker = st.text_input('Input ticker')
+tickerlist = 'https://api.goapi.id/v1/stock/idx/companies?api_key='+apikey
+c.setopt(pycurl.HTTPHEADER, custom_headers)
+c.setopt(pycurl.URL, tickerlist)
+c.setopt(pycurl.WRITEDATA, buffer)
+c.setopt(pycurl.CAINFO, certifi.where())
+c.perform()
+
+tickers = buffer.getvalue()
+data1 = tickers.decode('iso-8859-1')
+dict1 = json.loads(data1)
+buffer.seek(0)
+buffer.truncate(0)
+
+try:
+  dict1 = dict1["data"]
+  dict1 = dict1["results"]
+  df_ticker = pd.DataFrame.from_dict(dict1)
+  df_ticker = df_ticker[['ticker', 'name']]
+  selectlist = df_ticker.values.tolist()
+  selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
+except (NameError, KeyError, ValueError):
+  pass
+
+ticker = st.selectbox('Input ticker', selectlist) # type: ignore
 ticker = str(ticker)
+ticker = ticker[:4]
 startdate = st.date_input('Input start date')
 startdate = str(startdate)
-apikey = st.secrets["apikey"]
-#apikey = st.text_input('Input API key')
 today = date.today().strftime("%Y-%m-%d")
 url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
 c.setopt(pycurl.HTTPHEADER, custom_headers)
@@ -30,9 +56,8 @@ c.perform()
 c.close()
 
 body = buffer.getvalue()
-print(body.decode('iso-8859-1'))
-data1 = body.decode('iso-8859-1')
-dict = json.loads(data1)
+data2 = body.decode('iso-8859-1')
+dict = json.loads(data2)
 try:
   dict = dict["data"]
   dict = dict["results"]
@@ -51,7 +76,7 @@ except (NameError, KeyError, ValueError):
   
 try:
   m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
-  m.fit(df_train)
+  m.fit(df_train) # type: ignore
   future = m.make_future_dataframe(periods=period)
   future['floor'] = 0
   forecast = m.predict(future)
