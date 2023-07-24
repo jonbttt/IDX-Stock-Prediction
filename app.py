@@ -13,7 +13,7 @@ buffer = BytesIO()
 c = pycurl.Curl()
 custom_headers = ['User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0/8mqLkJuL-86']
 
-st.title('IDX stock list')
+st.title('IDX Stock Prediction')
 ticker = st.text_input('Input ticker')
 ticker = str(ticker)
 startdate = st.date_input('Input start date')
@@ -40,13 +40,13 @@ try:
   df_train = data[['date', 'close']]
   df_train = df_train.rename(columns={"date": "ds", "close": "y"})
   df_train['floor'] = 0
-except KeyError:
+except (NameError, KeyError, ValueError):
   pass
 
 period = st.text_input("How many days ahead?")
 try:
   period = int(period)
-except ValueError:
+except (NameError, KeyError, ValueError):
   pass
   
 try:
@@ -64,5 +64,5 @@ try:
   st.write("Prophet forecast components")
   fig2 = m.plot_components(forecast)
   st.write(fig2)
-except (NameError, ValueError):
+except (NameError, KeyError, ValueError):
   pass
