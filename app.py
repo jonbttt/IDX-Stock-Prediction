@@ -45,8 +45,8 @@ except (NameError, KeyError, ValueError):
 ticker = st.selectbox('Input ticker', selectlist) # type: ignore
 ticker = str(ticker)
 ticker = ticker[:4]
-startdate = date.today() - relativedelta(years=3)
-startdate = st.date_input('Input start date')
+yr2date = date.today() - relativedelta(years=2)
+startdate = st.date_input('Input start date', value=yr2date)
 startdate = str(startdate)
 today = date.today().strftime("%Y-%m-%d")
 url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
