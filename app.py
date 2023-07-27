@@ -122,41 +122,23 @@ with st.sidebar:
     string1 = separator.join(newslist)
     newslist = string1.split('||')
     st.caption(newslist[1])
-    st.markdown(f'''
-     <a href={newslist[0]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[0])
     st.caption(newslist[3])
-    st.markdown(f'''
-     <a href={newslist[2]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[2])
     st.caption(newslist[5])
-    st.markdown(f'''
-     <a href={newslist[4]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[4])
     st.caption(newslist[7])
-    st.markdown(f'''
-     <a href={newslist[6]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[6])
     st.caption(newslist[9])
-    st.markdown(f'''
-     <a href={newslist[8]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[8])
     st.caption(newslist[11])
-    st.markdown(f'''
-     <a href={newslist[10]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[10])
     st.caption(newslist[13])
-    st.markdown(f'''
-     <a href={newslist[12]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[12])
     st.caption(newslist[15])
-    st.markdown(f'''
-     <a href={newslist[14]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[14])
     st.caption(newslist[17])
-    st.markdown(f'''
-     <a href={newslist[16]}><button style="background-color:Red;">Full Article</button></a> 
-''')
+    st.markdown(newslist[16])
 
 try:
   dict1 = dict1["data"]
