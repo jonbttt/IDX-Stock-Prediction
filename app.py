@@ -32,7 +32,7 @@ def get_st_button_a_tag(url_link, button_name):
     width: auto;
     userSelect: none;
     backgroundColor: #262730;
-    border: 2px solid rgb(255, 75, 75);">{button_name}</button></a>
+    border: 2px solid rgb(59, 60, 68);">{button_name}</button></a>
     '''
 
 apikey = st.secrets["apikey"]
