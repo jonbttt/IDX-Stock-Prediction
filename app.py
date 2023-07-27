@@ -1,15 +1,17 @@
-import pycurl
 import certifi
 import json
-from io import BytesIO
 import pandas as pd
+import pycurl
+import re
+import requests
 import streamlit as st
+from bs4 import BeautifulSoup
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from io import BytesIO
+from plotly import graph_objs as go
 from prophet import Prophet
 from prophet.plot import plot_plotly
-from plotly import graph_objs as go
-import re
 
 apikey = st.secrets["apikey"]
 #apikey = st.text_input('Input API key')
@@ -17,6 +19,7 @@ apikey = st.secrets["apikey"]
 buffer = BytesIO()
 c = pycurl.Curl()
 custom_headers = ['User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0/8mqLkJuL-86']
+today = date.today().strftime("%Y-%m-%d")
 
 st.title('IDX Stock Prediction')
 tickerlist = 'https://api.goapi.id/v1/stock/idx/companies?api_key='+apikey
@@ -100,6 +103,60 @@ with st.sidebar:
 
   with tab3:
     st.write("Recent Finance News")
+    st.caption("Articles are from the official IDX channel")
+    string1 = ""
+    newsurl = "https://www.idxchannel.com/indeks?date="+today+"&idkanal=1"
+    print(newsurl)
+    reqs = requests.get(newsurl)
+    soup = BeautifulSoup(reqs.text, 'html.parser')
+    divs = soup.find_all("div", {"class": "title-capt"})
+
+    newslist = []
+    for x in divs:
+        newslist.append(str(x))
+    newslist = [item.replace('<div class="title-capt">\n<h2 class="list-berita-baru">', '') for item in newslist]
+    newslist = [item.replace('</a></h2>\n</div>', '') for item in newslist]
+    newslist = [item.replace('<a href="', '') for item in newslist]
+    newslist = [item.replace('">', '||') for item in newslist]
+    separator = '||'
+    string1 = separator.join(newslist)
+    newslist = string1.split('||')
+    st.caption(newslist[1])
+    st.markdown(f'''
+     <a href={newslist[0]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[3])
+    st.markdown(f'''
+     <a href={newslist[2]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[5])
+    st.markdown(f'''
+     <a href={newslist[4]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[7])
+    st.markdown(f'''
+     <a href={newslist[6]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[9])
+    st.markdown(f'''
+     <a href={newslist[8]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[11])
+    st.markdown(f'''
+     <a href={newslist[10]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[13])
+    st.markdown(f'''
+     <a href={newslist[12]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[15])
+    st.markdown(f'''
+     <a href={newslist[14]}><button style="background-color:Red;">Full Article</button></a> 
+''')
+    st.caption(newslist[17])
+    st.markdown(f'''
+     <a href={newslist[16]}><button style="background-color:Red;">Full Article</button></a> 
+''')
 
 try:
   dict1 = dict1["data"]
@@ -117,7 +174,7 @@ ticker = ticker[:4]
 yr2date = date.today() - relativedelta(years=2)
 startdate = st.date_input('Input start date', value=yr2date)
 startdate = str(startdate)
-today = date.today().strftime("%Y-%m-%d")
+
 url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
 c.setopt(pycurl.HTTPHEADER, custom_headers)
 c.setopt(pycurl.URL, url)
@@ -129,6 +186,7 @@ c.close()
 body = buffer.getvalue()
 data2 = body.decode('iso-8859-1')
 dict = json.loads(data2)
+
 try:
   dict = dict["data"]
   dict = dict["results"]
