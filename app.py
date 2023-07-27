@@ -22,6 +22,18 @@ def open_page(url):
     """ % (url)
     html(open_script)
 
+height_hack = '''
+<script>
+    var hide_me_list = window.parent.document.querySelectorAll('iframe');
+    for (let i = 0; i < hide_me_list.length; i++) { 
+        if (hide_me_list[i].height == 0) {
+            hide_me_list[i].parentNode.style.height = 0;
+            hide_me_list[i].parentNode.style.marginBottom = '-1rem';
+        };
+    };
+</script>
+'''
+
 apikey = st.secrets["apikey"]
 #apikey = st.text_input('Input API key')
 
@@ -81,7 +93,9 @@ with st.sidebar:
     gainerlist = df_gainer.values.tolist()
     gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
     st.caption('1. '+gainerlist[0])
+    st.components.v1.html(height_hack, height=0)
     st.caption('2. '+gainerlist[1])
+    st.components.v1.html(height_hack, height=0)
     st.caption('3. '+gainerlist[2])
     st.caption('4. '+gainerlist[3])
     st.caption('5. '+gainerlist[4])
