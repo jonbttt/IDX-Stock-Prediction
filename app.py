@@ -59,31 +59,48 @@ buffer.seek(0)
 buffer.truncate(0)
 
 with st.sidebar:
-  st.write("Top 5 Gainers")
-  dictgainer = dictgainer["data"]
-  dictgainer = dictgainer["results"]
-  df_gainer = pd.DataFrame.from_dict(dictgainer)
-  df_gainer = df_gainer['ticker']
-  gainerlist = df_gainer.values.tolist()
-  gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
-  st.caption('1. '+gainerlist[1])
-  st.caption('2. '+gainerlist[2])
-  st.caption('3. '+gainerlist[3])
-  st.caption('4. '+gainerlist[4])
-  st.caption('5. '+gainerlist[5])
-  st.caption("Top 5 Losers")
-  dictloser = dictloser["data"]
-  dictloser = dictloser["results"]
-  df_loser = pd.DataFrame.from_dict(dictloser)
-  df_loser = df_loser['ticker']
-  loserlist = df_loser.values.tolist()
-  loserlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in loserlist]
-  st.write('1. '+loserlist[1])
-  st.write('2. '+loserlist[2])
-  st.write('3. '+loserlist[3])
-  st.write('4. '+loserlist[4])
-  st.write('5. '+loserlist[5])
-  
+  tab1, tab2, tab3 = st.tabs(["Gainers", "Losers", "News"])
+  with tab1:
+    st.write("Top 10 Gainers")
+    dictgainer = dictgainer["data"]
+    dictgainer = dictgainer["results"]
+    df_gainer = pd.DataFrame.from_dict(dictgainer)
+    df_gainer = df_gainer['ticker']
+    gainerlist = df_gainer.values.tolist()
+    gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
+    st.caption('1. '+gainerlist[1])
+    st.caption('2. '+gainerlist[2])
+    st.caption('3. '+gainerlist[3])
+    st.caption('4. '+gainerlist[4])
+    st.caption('5. '+gainerlist[5])
+    st.caption('6. '+gainerlist[6])
+    st.caption('7. '+gainerlist[7])
+    st.caption('8. '+gainerlist[8])
+    st.caption('9. '+gainerlist[9])
+    st.caption('10. '+gainerlist[10])
+
+  with tab2:
+    st.write("Top 10 Losers")
+    dictloser = dictloser["data"]
+    dictloser = dictloser["results"]
+    df_loser = pd.DataFrame.from_dict(dictloser)
+    df_loser = df_loser['ticker']
+    loserlist = df_loser.values.tolist()
+    loserlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in loserlist]
+    st.caption('1. '+loserlist[1])
+    st.caption('2. '+loserlist[2])
+    st.caption('3. '+loserlist[3])
+    st.caption('4. '+loserlist[4])
+    st.caption('5. '+loserlist[5])
+    st.caption('6. '+loserlist[6])
+    st.caption('7. '+loserlist[7])
+    st.caption('8. '+loserlist[8])
+    st.caption('9. '+loserlist[9])
+    st.caption('10. '+loserlist[10])
+
+  with tab3:
+    st.write("Recent Finance News")
+
 try:
   dict1 = dict1["data"]
   dict1 = dict1["results"]
