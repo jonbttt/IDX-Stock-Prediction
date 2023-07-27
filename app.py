@@ -58,7 +58,7 @@ dictloser = json.loads(dataloser)
 buffer.seek(0)
 buffer.truncate(0)
 
-col1, col2 = st.columns([0.7, 0.3])
+col1, col2, col3 = st.columns([0.8, 0.1, 0.1])
 
 with col1:
   try:
@@ -115,6 +115,7 @@ with col2:
   st.write('4. '+gainerlist[4])
   st.write('5. '+gainerlist[5])
 
+with col3:
   st.caption("Top 5 Losers")
   dictloser = dictloser["data"]
   dictloser = dictloser["results"]
