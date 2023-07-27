@@ -122,7 +122,7 @@ with st.sidebar:
     string1 = separator.join(newslist)
     newslist = string1.split('||')
     st.caption(newslist[1])
-    st.markdown("[newslist[0]]")
+    st.markdown("["+newslist[0]+"]")
     st.caption(newslist[3])
     st.markdown("[newslist[2]]")
     st.caption(newslist[5])
