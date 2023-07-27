@@ -24,14 +24,15 @@ def get_st_button_a_tag(url_link, button_name):
     return f'''
     <a href={url_link}><button style="
     fontWeight: 400;
+    fontColor: #FAFAFA;
     padding: 0.25rem 0.75rem;
     borderRadius: 0.25rem;
     margin: 0px;
     lineHeight: 1.6;
     width: auto;
     userSelect: none;
-    backgroundColor: #FFFFFF;
-    border: 1px solid rgba(49, 51, 63, 0.2);">{button_name}</button></a>
+    backgroundColor: #FF4B4B;
+    border: 1px solid rgba(255, 75, 75, 0.2);">{button_name}</button></a>
     '''
 
 apikey = st.secrets["apikey"]
