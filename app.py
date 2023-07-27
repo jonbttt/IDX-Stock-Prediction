@@ -5,6 +5,7 @@ from io import BytesIO
 import pandas as pd
 import streamlit as st
 from datetime import date
+from dateutil.relativedelta import relativedelta
 from prophet import Prophet
 from prophet.plot import plot_plotly
 from plotly import graph_objs as go
@@ -44,6 +45,7 @@ except (NameError, KeyError, ValueError):
 ticker = st.selectbox('Input ticker', selectlist) # type: ignore
 ticker = str(ticker)
 ticker = ticker[:4]
+startdate = date.today() - relativedelta(years=3)
 startdate = st.date_input('Input start date')
 startdate = str(startdate)
 today = date.today().strftime("%Y-%m-%d")
