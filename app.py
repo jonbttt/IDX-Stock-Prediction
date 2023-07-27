@@ -151,6 +151,9 @@ with st.sidebar:
     st.markdown(get_st_button_a_tag(newslist[12], newslist[13]), unsafe_allow_html=True)
     st.markdown(get_st_button_a_tag(newslist[14], newslist[15]), unsafe_allow_html=True)
     st.markdown(get_st_button_a_tag(newslist[16], newslist[17]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[18], newslist[19]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[20], newslist[21]), unsafe_allow_html=True)
+    
 
 try:
   dict1 = dict1["data"]
