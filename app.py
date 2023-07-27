@@ -58,64 +58,19 @@ dictloser = json.loads(dataloser)
 buffer.seek(0)
 buffer.truncate(0)
 
-col1, col2, col3 = st.columns([0.8, 0.1, 0.1], gap="small")
-
-with col1:
-  try:
-    dict1 = dict1["data"]
-    dict1 = dict1["results"]
-    df_ticker = pd.DataFrame.from_dict(dict1)
-    df_ticker = df_ticker[['ticker', 'name']]
-    selectlist = df_ticker.values.tolist()
-    selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
-  except (NameError, KeyError, ValueError):
-    pass
-
-  ticker = st.selectbox('Input ticker', selectlist) # type: ignore
-  ticker = str(ticker)
-  ticker = ticker[:4]
-  yr2date = date.today() - relativedelta(years=2)
-  startdate = st.date_input('Input start date', value=yr2date)
-  startdate = str(startdate)
-  today = date.today().strftime("%Y-%m-%d")
-  url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
-  c.setopt(pycurl.HTTPHEADER, custom_headers)
-  c.setopt(pycurl.URL, url)
-  c.setopt(pycurl.WRITEDATA, buffer)
-  c.setopt(pycurl.CAINFO, certifi.where())
-  c.perform()
-  c.close()
-
-  body = buffer.getvalue()
-  data2 = body.decode('iso-8859-1')
-  dict = json.loads(data2)
-  try:
-    dict = dict["data"]
-    dict = dict["results"]
-    data = pd.DataFrame.from_dict(dict)
-    df_train = data[['date', 'close']]
-    df_train = df_train.rename(columns={"date": "ds", "close": "y"})
-    df_train['floor'] = 0
-  except (NameError, KeyError, ValueError):
-    pass
-
-  period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
-
-with col2:
-  st.caption("Top 5 Gainers")
+with st.sidebar:
+  st.write("Top 5 Gainers")
   dictgainer = dictgainer["data"]
   dictgainer = dictgainer["results"]
   df_gainer = pd.DataFrame.from_dict(dictgainer)
   df_gainer = df_gainer['ticker']
   gainerlist = df_gainer.values.tolist()
   gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
-  st.write('1. '+gainerlist[1])
-  st.write('2. '+gainerlist[2])
-  st.write('3. '+gainerlist[3])
-  st.write('4. '+gainerlist[4])
-  st.write('5. '+gainerlist[5])
-
-with col3:
+  st.caption('1. '+gainerlist[1])
+  st.caption('2. '+gainerlist[2])
+  st.caption('3. '+gainerlist[3])
+  st.caption('4. '+gainerlist[4])
+  st.caption('5. '+gainerlist[5])
   st.caption("Top 5 Losers")
   dictloser = dictloser["data"]
   dictloser = dictloser["results"]
@@ -128,6 +83,46 @@ with col3:
   st.write('3. '+loserlist[3])
   st.write('4. '+loserlist[4])
   st.write('5. '+loserlist[5])
+  
+try:
+  dict1 = dict1["data"]
+  dict1 = dict1["results"]
+  df_ticker = pd.DataFrame.from_dict(dict1)
+  df_ticker = df_ticker[['ticker', 'name']]
+  selectlist = df_ticker.values.tolist()
+  selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
+except (NameError, KeyError, ValueError):
+  pass
+
+ticker = st.selectbox('Input ticker', selectlist) # type: ignore
+ticker = str(ticker)
+ticker = ticker[:4]
+yr2date = date.today() - relativedelta(years=2)
+startdate = st.date_input('Input start date', value=yr2date)
+startdate = str(startdate)
+today = date.today().strftime("%Y-%m-%d")
+url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
+c.setopt(pycurl.HTTPHEADER, custom_headers)
+c.setopt(pycurl.URL, url)
+c.setopt(pycurl.WRITEDATA, buffer)
+c.setopt(pycurl.CAINFO, certifi.where())
+c.perform()
+c.close()
+
+body = buffer.getvalue()
+data2 = body.decode('iso-8859-1')
+dict = json.loads(data2)
+try:
+  dict = dict["data"]
+  dict = dict["results"]
+  data = pd.DataFrame.from_dict(dict)
+  df_train = data[['date', 'close']]
+  df_train = df_train.rename(columns={"date": "ds", "close": "y"})
+  df_train['floor'] = 0
+except (NameError, KeyError, ValueError):
+  pass
+
+period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
 
 try:
   m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
