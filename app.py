@@ -5,6 +5,7 @@ import pycurl
 import re
 import requests
 import streamlit as st
+from streamlit.components.v1 import html
 from bs4 import BeautifulSoup
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -12,6 +13,14 @@ from io import BytesIO
 from plotly import graph_objs as go
 from prophet import Prophet
 from prophet.plot import plot_plotly
+
+def open_page(url):
+    open_script= """
+        <script type="text/javascript">
+            window.open('%s', '_blank').focus();
+        </script>
+    """ % (url)
+    html(open_script)
 
 apikey = st.secrets["apikey"]
 #apikey = st.text_input('Input API key')
@@ -122,23 +131,23 @@ with st.sidebar:
     string1 = separator.join(newslist)
     newslist = string1.split('||')
     st.caption(newslist[1])
-    st.markdown("["+newslist[0]+"]")
+    st.button('View full article', on_click=open_page(newslist[0]))
     st.caption(newslist[3])
-    st.markdown("[newslist[2]]")
+    st.button('View full article', on_click=open_page(newslist[2]))
     st.caption(newslist[5])
-    st.markdown("[newslist[4]]")
+    st.button('View full article', on_click=open_page(newslist[4]))
     st.caption(newslist[7])
-    st.markdown("[newslist[6]]")
+    st.button('View full article', on_click=open_page(newslist[6]))
     st.caption(newslist[9])
-    st.markdown("[newslist[8]]")
+    st.button('View full article', on_click=open_page(newslist[8]))
     st.caption(newslist[11])
-    st.markdown("[newslist[10]]")
+    st.button('View full article', on_click=open_page(newslist[10]))
     st.caption(newslist[13])
-    st.markdown("[newslist[12]]")
+    st.button('View full article', on_click=open_page(newslist[12]))
     st.caption(newslist[15])
-    st.markdown("[newslist[14]]")
+    st.button('View full article', on_click=open_page(newslist[14]))
     st.caption(newslist[17])
-    st.markdown("[newslist[16]]")
+    st.button('View full article', on_click=open_page(newslist[16]))
 
 try:
   dict1 = dict1["data"]
