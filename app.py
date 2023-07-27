@@ -144,13 +144,13 @@ with st.sidebar:
     newslist = string1.split('||')
     st.markdown(get_st_button_a_tag(newslist[0], newslist[1]), unsafe_allow_html=True)
     st.markdown(get_st_button_a_tag(newslist[2], newslist[3]), unsafe_allow_html=True)
-    st.button(newslist[5], on_click=open_page(newslist[4]), key="3")
-    st.button(newslist[7], on_click=open_page(newslist[6]), key="4")
-    st.button(newslist[9], on_click=open_page(newslist[8]), key="5")
-    st.button(newslist[11], on_click=open_page(newslist[10]), key="6")
-    st.button(newslist[13], on_click=open_page(newslist[12]), key="7")
-    st.button(newslist[15], on_click=open_page(newslist[14]), key="8")
-    st.button(newslist[17], on_click=open_page(newslist[16]), key="9")
+    st.markdown(get_st_button_a_tag(newslist[4], newslist[5]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[6], newslist[7]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[8], newslist[9]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[10], newslist[11]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[12], newslist[13]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[14], newslist[15]), unsafe_allow_html=True)
+    st.markdown(get_st_button_a_tag(newslist[16], newslist[17]), unsafe_allow_html=True)
 
 try:
   dict1 = dict1["data"]
