@@ -1,4 +1,4 @@
-# IDX-Stock-Prediction
+# IDX Stock Prediction App
 Access app online [here](https://idx-stock-prediction.streamlit.app/)
 
 Streamlit app for stock closing price prediction using Facebook Prophet for time series forecasting on stocks from the Indonesian Stock Exchange (IDX).
