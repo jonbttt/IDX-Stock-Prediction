@@ -70,11 +70,7 @@ try:
 except (NameError, KeyError, ValueError):
   pass
 
-period = st.text_input("How many days ahead?")
-try:
-  period = int(period)
-except (NameError, KeyError, ValueError):
-  pass
+period = st.slider("How many days ahead?", min_value=1, max_value=1500, step=250)
   
 try:
   m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
