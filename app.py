@@ -14,25 +14,25 @@ from plotly import graph_objs as go
 from prophet import Prophet
 from prophet.plot import plot_plotly
 
-def open_page(url):
-    open_script= """
-        <script type="text/javascript">
-            window.open('%s', '_blank').focus();
-        </script>
-    """ % (url)
-    html(open_script)
-
-height_hack = '''
-<script>
-    var hide_me_list = window.parent.document.querySelectorAll('iframe');
-    for (let i = 0; i < hide_me_list.length; i++) { 
-        if (hide_me_list[i].height == 0) {
-            hide_me_list[i].parentNode.style.height = 0;
-            hide_me_list[i].parentNode.style.marginBottom = '-1rem';
-        };
-    };
-</script>
-'''
+def get_st_button_a_tag(url_link, button_name):
+    """
+    generate html a tag
+    :param url_link:
+    :param button_name:
+    :return:
+    """
+    return f'''
+    <a href={url_link}><button style="
+    fontWeight: 400;
+    padding: 0.25rem 0.75rem;
+    borderRadius: 0.25rem;
+    margin: 0px;
+    lineHeight: 1.6;
+    width: auto;
+    userSelect: none;
+    backgroundColor: #FFFFFF;
+    border: 1px solid rgba(49, 51, 63, 0.2);">{button_name}</button></a>
+    '''
 
 apikey = st.secrets["apikey"]
 #apikey = st.text_input('Input API key')
@@ -142,10 +142,8 @@ with st.sidebar:
     separator = '||'
     string1 = separator.join(newslist)
     newslist = string1.split('||')
-    st.button(newslist[1], on_click=open_page(newslist[0]), key="1")
-    html(height_hack, height=0)
+    st.markdown(get_st_button_a_tag(newslist[0], newslist[1]), unsafe_allow_html=True)
     st.button(newslist[3], on_click=open_page(newslist[2]), key="2")
-    html(height_hack, height=0)
     st.button(newslist[5], on_click=open_page(newslist[4]), key="3")
     st.button(newslist[7], on_click=open_page(newslist[6]), key="4")
     st.button(newslist[9], on_click=open_page(newslist[8]), key="5")
