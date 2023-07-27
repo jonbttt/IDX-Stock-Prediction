@@ -143,7 +143,7 @@ with st.sidebar:
     string1 = separator.join(newslist)
     newslist = string1.split('||')
     st.markdown(get_st_button_a_tag(newslist[0], newslist[1]), unsafe_allow_html=True)
-    st.button(newslist[3], on_click=open_page(newslist[2]), key="2")
+    st.markdown(get_st_button_a_tag(newslist[2], newslist[3]), unsafe_allow_html=True)
     st.button(newslist[5], on_click=open_page(newslist[4]), key="3")
     st.button(newslist[7], on_click=open_page(newslist[6]), key="4")
     st.button(newslist[9], on_click=open_page(newslist[8]), key="5")
