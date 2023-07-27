@@ -32,46 +32,102 @@ dict1 = json.loads(data1)
 buffer.seek(0)
 buffer.truncate(0)
 
-try:
-  dict1 = dict1["data"]
-  dict1 = dict1["results"]
-  df_ticker = pd.DataFrame.from_dict(dict1)
-  df_ticker = df_ticker[['ticker', 'name']]
-  selectlist = df_ticker.values.tolist()
-  selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
-except (NameError, KeyError, ValueError):
-  pass
-
-ticker = st.selectbox('Input ticker', selectlist) # type: ignore
-ticker = str(ticker)
-ticker = ticker[:4]
-yr2date = date.today() - relativedelta(years=2)
-startdate = st.date_input('Input start date', value=yr2date)
-startdate = str(startdate)
-today = date.today().strftime("%Y-%m-%d")
-url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
+gainerjson = 'https://api.goapi.id/v1/stock/idx/top_gainer?api_key='+apikey
 c.setopt(pycurl.HTTPHEADER, custom_headers)
-c.setopt(pycurl.URL, url)
+c.setopt(pycurl.URL, gainerjson)
 c.setopt(pycurl.WRITEDATA, buffer)
 c.setopt(pycurl.CAINFO, certifi.where())
 c.perform()
-c.close()
 
-body = buffer.getvalue()
-data2 = body.decode('iso-8859-1')
-dict = json.loads(data2)
-try:
-  dict = dict["data"]
-  dict = dict["results"]
-  data = pd.DataFrame.from_dict(dict)
-  df_train = data[['date', 'close']]
-  df_train = df_train.rename(columns={"date": "ds", "close": "y"})
-  df_train['floor'] = 0
-except (NameError, KeyError, ValueError):
-  pass
+gainers = buffer.getvalue()
+datagainer = gainers.decode('iso-8859-1')
+dictgainer = json.loads(data1)
+buffer.seek(0)
+buffer.truncate(0)
 
-period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
-  
+loserjson = 'https://api.goapi.id/v1/stock/idx/top_loser?api_key='+apikey
+c.setopt(pycurl.HTTPHEADER, custom_headers)
+c.setopt(pycurl.URL, loserjson)
+c.setopt(pycurl.WRITEDATA, buffer)
+c.setopt(pycurl.CAINFO, certifi.where())
+c.perform()
+
+losers = buffer.getvalue()
+dataloser = losers.decode('iso-8859-1')
+dictloser = json.loads(dataloser)
+buffer.seek(0)
+buffer.truncate(0)
+
+col1, col2 = st.columns([0.7, 0.3])
+
+with col1:
+  try:
+    dict1 = dict1["data"]
+    dict1 = dict1["results"]
+    df_ticker = pd.DataFrame.from_dict(dict1)
+    df_ticker = df_ticker[['ticker', 'name']]
+    selectlist = df_ticker.values.tolist()
+    selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
+  except (NameError, KeyError, ValueError):
+    pass
+
+  ticker = st.selectbox('Input ticker', selectlist) # type: ignore
+  ticker = str(ticker)
+  ticker = ticker[:4]
+  yr2date = date.today() - relativedelta(years=2)
+  startdate = st.date_input('Input start date', value=yr2date)
+  startdate = str(startdate)
+  today = date.today().strftime("%Y-%m-%d")
+  url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
+  c.setopt(pycurl.HTTPHEADER, custom_headers)
+  c.setopt(pycurl.URL, url)
+  c.setopt(pycurl.WRITEDATA, buffer)
+  c.setopt(pycurl.CAINFO, certifi.where())
+  c.perform()
+  c.close()
+
+  body = buffer.getvalue()
+  data2 = body.decode('iso-8859-1')
+  dict = json.loads(data2)
+  try:
+    dict = dict["data"]
+    dict = dict["results"]
+    data = pd.DataFrame.from_dict(dict)
+    df_train = data[['date', 'close']]
+    df_train = df_train.rename(columns={"date": "ds", "close": "y"})
+    df_train['floor'] = 0
+  except (NameError, KeyError, ValueError):
+    pass
+
+  period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
+
+with col2:
+  st.caption("Top 5 Gainers")
+  dictgainer = dictgainer["data"]
+  dictgainer = dictgainer["results"]
+  df_gainer = pd.DataFrame.from_dict(dictgainer)
+  df_gainer = df_gainer['ticker']
+  gainerlist = df_gainer.values.tolist()
+  gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
+  st.write('1. '+gainerlist[1])
+  st.write('2. '+gainerlist[2])
+  st.write('3. '+gainerlist[3])
+  st.write('4. '+gainerlist[4])
+  st.write('5. '+gainerlist[5])
+
+  st.caption("Top 5 Losers")
+  dictloser = dictloser["data"]
+  dictloser = dictloser["results"]
+  df_loser = pd.DataFrame.from_dict(dictloser)
+  df_loser = df_loser['ticker']
+  loserlist = df_loser.values.tolist()
+  loserlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in loserlist]
+  st.write('1. '+loserlist[1])
+  st.write('2. '+loserlist[2])
+  st.write('3. '+loserlist[3])
+  st.write('4. '+loserlist[4])
+  st.write('5. '+loserlist[5])
+
 try:
   m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
   m.fit(df_train) # type: ignore
