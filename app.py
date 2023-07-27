@@ -23,7 +23,7 @@ def get_st_button_a_tag(url_link, button_name):
     """
     return f'''
     <a href={url_link}><button style="
-    color: #FAFAFA;
+    color: #E6EAF1;
     fontSize: 12px;
     fontWeight: 400;
     padding: 0.25rem 0.75rem;
