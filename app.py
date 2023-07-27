@@ -58,7 +58,7 @@ dictloser = json.loads(dataloser)
 buffer.seek(0)
 buffer.truncate(0)
 
-col1, col2, col3 = st.columns([0.7, 0.15, 0.15])
+col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
 
 with col1:
   try:
