@@ -145,17 +145,12 @@ with st.sidebar:
     string1 = separator.join(newslist)
     newslist = string1.split('||')
     try:
-      st.markdown(get_st_button_a_tag(newslist[0], newslist[1]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[2], newslist[3]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[4], newslist[5]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[6], newslist[7]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[8], newslist[9]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[10], newslist[11]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[12], newslist[13]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[14], newslist[15]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[16], newslist[17]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[18], newslist[19]), unsafe_allow_html=True)
-      st.markdown(get_st_button_a_tag(newslist[20], newslist[21]), unsafe_allow_html=True)
+      x = 0
+      y = 1
+      while True:
+        st.markdown(get_st_button_a_tag(newslist[x], newslist[y]), unsafe_allow_html=True)
+        x = x + 2
+        y = y + 2
     except IndexError:
       pass
 
