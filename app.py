@@ -18,7 +18,7 @@ buffer = BytesIO()
 c = pycurl.Curl()
 custom_headers = ['User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0/8mqLkJuL-86']
 
-st.title('IDX Stock Prediction')
+st.title('IDX Stock Prediction App')
 tickerlist = 'https://api.goapi.id/v1/stock/idx/companies?api_key='+apikey
 c.setopt(pycurl.HTTPHEADER, custom_headers)
 c.setopt(pycurl.URL, tickerlist)
