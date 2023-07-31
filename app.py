@@ -58,71 +58,80 @@ dict1 = json.loads(data1)
 buffer.seek(0)
 buffer.truncate(0)
 
-gainerjson = 'https://api.goapi.id/v1/stock/idx/top_gainer?api_key='+apikey
-c.setopt(pycurl.HTTPHEADER, custom_headers)
-c.setopt(pycurl.URL, gainerjson)
-c.setopt(pycurl.WRITEDATA, buffer)
-c.setopt(pycurl.CAINFO, certifi.where())
-c.perform()
-
-gainers = buffer.getvalue()
-datagainer = gainers.decode('iso-8859-1')
-dictgainer = json.loads(datagainer)
-buffer.seek(0)
-buffer.truncate(0)
-
-loserjson = 'https://api.goapi.id/v1/stock/idx/top_loser?api_key='+apikey
-c.setopt(pycurl.HTTPHEADER, custom_headers)
-c.setopt(pycurl.URL, loserjson)
-c.setopt(pycurl.WRITEDATA, buffer)
-c.setopt(pycurl.CAINFO, certifi.where())
-c.perform()
-
-losers = buffer.getvalue()
-dataloser = losers.decode('iso-8859-1')
-dictloser = json.loads(dataloser)
-buffer.seek(0)
-buffer.truncate(0)
+try:
+    gainerjson = 'https://api.goapi.id/v1/stock/idx/top_gainer?api_key='+apikey
+    c.setopt(pycurl.HTTPHEADER, custom_headers)
+    c.setopt(pycurl.URL, gainerjson)
+    c.setopt(pycurl.WRITEDATA, buffer)
+    c.setopt(pycurl.CAINFO, certifi.where())
+    c.perform()
+    
+    gainers = buffer.getvalue()
+    datagainer = gainers.decode('iso-8859-1')
+    dictgainer = json.loads(datagainer)
+    buffer.seek(0)
+    buffer.truncate(0)
+    
+    loserjson = 'https://api.goapi.id/v1/stock/idx/top_loser?api_key='+apikey
+    c.setopt(pycurl.HTTPHEADER, custom_headers)
+    c.setopt(pycurl.URL, loserjson)
+    c.setopt(pycurl.WRITEDATA, buffer)
+    c.setopt(pycurl.CAINFO, certifi.where())
+    c.perform()
+    
+    losers = buffer.getvalue()
+    dataloser = losers.decode('iso-8859-1')
+    dictloser = json.loads(dataloser)
+    buffer.seek(0)
+    buffer.truncate(0)
+except KeyError:
+    pass
 
 with st.sidebar:
   tab1, tab2, tab3 = st.tabs(["Gainers", "Losers", "News"])
   with tab1:
     st.write("Top 10 Gainers")
-    dictgainer = dictgainer["data"]
-    dictgainer = dictgainer["results"]
-    df_gainer = pd.DataFrame.from_dict(dictgainer)
-    df_gainer = df_gainer['ticker']
-    gainerlist = df_gainer.values.tolist()
-    gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
-    st.caption('1. '+gainerlist[0])
-    st.caption('2. '+gainerlist[1])
-    st.caption('3. '+gainerlist[2])
-    st.caption('4. '+gainerlist[3])
-    st.caption('5. '+gainerlist[4])
-    st.caption('6. '+gainerlist[5])
-    st.caption('7. '+gainerlist[6])
-    st.caption('8. '+gainerlist[7])
-    st.caption('9. '+gainerlist[8])
-    st.caption('10. '+gainerlist[9])
+    try:
+        dictgainer = dictgainer["data"]
+        dictgainer = dictgainer["results"]
+        df_gainer = pd.DataFrame.from_dict(dictgainer)
+        df_gainer = df_gainer['ticker']
+        gainerlist = df_gainer.values.tolist()
+        gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
+        st.caption('1. '+gainerlist[0])
+        st.caption('2. '+gainerlist[1])
+        st.caption('3. '+gainerlist[2])
+        st.caption('4. '+gainerlist[3])
+        st.caption('5. '+gainerlist[4])
+        st.caption('6. '+gainerlist[5])
+        st.caption('7. '+gainerlist[6])
+        st.caption('8. '+gainerlist[7])
+        st.caption('9. '+gainerlist[8])
+        st.caption('10. '+gainerlist[9])
+    except KeyError:
+        pass
 
   with tab2:
     st.write("Top 10 Losers")
-    dictloser = dictloser["data"]
-    dictloser = dictloser["results"]
-    df_loser = pd.DataFrame.from_dict(dictloser)
-    df_loser = df_loser['ticker']
-    loserlist = df_loser.values.tolist()
-    loserlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in loserlist]
-    st.caption('1. '+loserlist[0])
-    st.caption('2. '+loserlist[1])
-    st.caption('3. '+loserlist[2])
-    st.caption('4. '+loserlist[3])
-    st.caption('5. '+loserlist[4])
-    st.caption('6. '+loserlist[5])
-    st.caption('7. '+loserlist[6])
-    st.caption('8. '+loserlist[7])
-    st.caption('9. '+loserlist[8])
-    st.caption('10. '+loserlist[9])
+    try:
+        dictloser = dictloser["data"]
+        dictloser = dictloser["results"]
+        df_loser = pd.DataFrame.from_dict(dictloser)
+        df_loser = df_loser['ticker']
+        loserlist = df_loser.values.tolist()
+        loserlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in loserlist]
+        st.caption('1. '+loserlist[0])
+        st.caption('2. '+loserlist[1])
+        st.caption('3. '+loserlist[2])
+        st.caption('4. '+loserlist[3])
+        st.caption('5. '+loserlist[4])
+        st.caption('6. '+loserlist[5])
+        st.caption('7. '+loserlist[6])
+        st.caption('8. '+loserlist[7])
+        st.caption('9. '+loserlist[8])
+        st.caption('10. '+loserlist[9])
+    except KeyError:
+        pass
 
   with tab3:
     st.write("Recent Finance News")
