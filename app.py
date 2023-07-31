@@ -92,7 +92,7 @@ with st.sidebar:
   with tab1:
     st.write("Top 10 Gainers")
     try:
-        dictgainer = dictgainer["data"]
+        dictgainer = dictgainer["data"] # type: ignore
         dictgainer = dictgainer["results"]
         df_gainer = pd.DataFrame.from_dict(dictgainer)
         df_gainer = df_gainer['ticker']
@@ -114,7 +114,7 @@ with st.sidebar:
   with tab2:
     st.write("Top 10 Losers")
     try:
-        dictloser = dictloser["data"]
+        dictloser = dictloser["data"] # type: ignore
         dictloser = dictloser["results"]
         df_loser = pd.DataFrame.from_dict(dictloser)
         df_loser = df_loser['ticker']
@@ -162,7 +162,6 @@ with st.sidebar:
         y = y + 2
     except IndexError:
       pass
-
 
 try:
   dict1 = dict1["data"]
