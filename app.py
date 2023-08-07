@@ -237,19 +237,30 @@ try:
   st.write('Forecast')
   fig1 = plot_plotly(m, forecast)
   fig1.update_yaxes(rangemode = "nonnegative")
-  #
-  fig1.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
-                    mode='lines',
-                    name='lines'))
-  fig1.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
-                    mode='lines',
-                    name='lines'))
-  fig1.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
-                    mode='lines',
-                    name='lines'))
-  #
+  
   st.plotly_chart(fig1)
-
+  #
+  bollingerdict = dict({
+    "data": [{"type": "bar",
+              "x": df_date, # type: ignore
+              "y": df_bu}], # type: ignore
+    "layout": {"title": {"text": "Bollinger Bands"}}
+})
+  fig3 = go.Figure(bollingerdict)
+  
+  fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
+                    mode='lines',
+                    name='lines'))
+  fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
+                    mode='lines',
+                    name='lines'))
+  fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
+                    mode='lines',
+                    name='lines'))
+  
+  st.plotly_chart(fig3)
+  #
+  
   st.write("Prophet forecast components")
   fig2 = m.plot_components(forecast)
   st.write(fig2)
