@@ -35,7 +35,22 @@ def get_st_button_a_tag(url_link, button_name):
     backgroundColor: #262730;
     border: 2px solid rgb(59, 60, 68);">{button_name}</button></a>
     '''
-
+#
+def bollinger_bands(df, n, m):
+    TP = (df['High'] + df['Low'] + df['Close']) / 3
+    data = TP
+    B_MA = pd.Series((data.rolling(n, min_periods=n).mean()), name='B_MA')
+    sigma = data.rolling(n, min_periods=n).std() 
+    
+    BU = pd.Series((B_MA + m * sigma), name='BU')
+    BL = pd.Series((B_MA - m * sigma), name='BL')
+    
+    df = df.join(B_MA)
+    df = df.join(BU)
+    df = df.join(BL)
+    
+    return df
+#
 apikey = st.secrets["apikey"]
 #apikey = st.text_input('Input API key')
 
@@ -196,6 +211,14 @@ try:
   dict = dict["data"]
   dict = dict["results"]
   data = pd.DataFrame.from_dict(dict)
+  #
+  df_bollinger = data[['date', 'high', 'low', 'close']]
+  df_bollinger = bollinger_bands(df_bollinger, 20, 2)
+  df_date = df_bollinger['date']
+  df_bu = df_bollinger['BU']
+  df_bl = df_bollinger['BL']
+  df_bma = df_bollinger['B_MA']
+  #
   df_train = data[['date', 'close']]
   df_train = df_train.rename(columns={"date": "ds", "close": "y"})
   df_train['floor'] = 0
@@ -214,6 +237,17 @@ try:
   st.write('Forecast')
   fig1 = plot_plotly(m, forecast)
   fig1.update_yaxes(rangemode = "nonnegative")
+  #
+  fig1.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
+                    mode='lines',
+                    name='lines'))
+  fig1.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
+                    mode='lines',
+                    name='lines'))
+  fig1.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
+                    mode='lines',
+                    name='lines'))
+  #
   st.plotly_chart(fig1)
 
   st.write("Prophet forecast components")
