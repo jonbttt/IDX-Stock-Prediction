@@ -5,3 +5,7 @@ Streamlit app for stock closing price prediction using Facebook Prophet for time
 
 IDX data is obtained from [GoAPI](https://wwww.goapi.id/).
 If requests have been maxed out, use your own API key from [GoAPI](https://wwww.goapi.id/), delete the hashtag from the 40th row of app.py, and input your own key on the Streamlit app.
+
+## Result:
+https://github.com/jonbttt/IDX-Stock-Prediction/assets/48402029/887dae0e-011e-4240-b5d3-7e871bce03f4
+
