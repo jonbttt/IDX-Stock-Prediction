@@ -326,7 +326,7 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_sd, # type: ignore
     )
 )
 st.plotly_chart(fig3)
-
+st.table(df_SO)
 st.write("Prophet forecast components")
 fig2 = m.plot_components(forecast)
 st.write(fig2)
