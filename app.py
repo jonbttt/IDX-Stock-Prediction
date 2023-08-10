@@ -235,6 +235,7 @@ except ValueError:
     databol = databol.astype({"high": float, "low": float, "close": float})
     databol = databol.astype({"high": int, "low": int, "close": int})
 df_bollinger = databol[['date', 'high', 'low', 'close']]
+df_bollinger = df_bollinger.iloc[::-1]
 df_bollinger = bollinger_bands(df_bollinger, 20, 2)
 
 df_close = df_bollinger['close']
