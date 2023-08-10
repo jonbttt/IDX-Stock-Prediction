@@ -1,5 +1,5 @@
 import streamlit as st
-apikey = st.secrets('apikey') # type: ignore
+apikey = st.secrets['apikey']
 #apikey = ''
 
 import certifi
