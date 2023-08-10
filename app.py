@@ -1,10 +1,13 @@
+import streamlit as st
+apikey = st.secrets('apikey') # type: ignore
+#apikey = ''
+
 import certifi
 import json
 import pandas as pd
 import pycurl
 import re
 import requests
-import streamlit as st
 from streamlit.components.v1 import html
 from bs4 import BeautifulSoup
 from datetime import date
@@ -54,7 +57,27 @@ def bollinger_bands(df, n, m):
     
     return df
 
-apikey = 'y6q1RZG9GoOeA681EQpBFSgesCuel1'
+def get_stochastic_oscillator(df, period=14):
+    for i in range(len(df)):
+        low = df.iloc[i]['close']
+        high = df.iloc[i]['close']
+        if i >= period:
+            n = 0
+            while n < period:
+                if df.iloc[i-n]['close'] >= high:
+                    high = df.iloc[i-n]['close']
+                elif df.iloc[i-n]['close'] < low:
+                    low = df.iloc[i-n]['close']
+                n += 1
+            df.at[i, 'best_low'] = low
+            df.at[i, 'best_high'] = high
+            df.at[i, 'fast_k'] = 100*((df.iloc[i]['close']-df.iloc[i]['best_low'])/(df.iloc[i]['best_high']-df.iloc[i]['best_low']))
+
+    df['fast_d'] = df['fast_k'].rolling(3).mean().round(2)
+    df['slow_k'] = df['fast_d']
+    df['slow_d'] = df['slow_k'].rolling(3).mean().round(2)
+
+    return df
 
 buffer = BytesIO()
 c = pycurl.Curl()
@@ -234,15 +257,15 @@ try:
 except ValueError:
     databol = databol.astype({"high": float, "low": float, "close": float})
     databol = databol.astype({"high": int, "low": int, "close": int})
-df_bollinger = databol[['date', 'high', 'low', 'close']]
-df_bollinger = df_bollinger.iloc[::-1]
-df_bollinger = bollinger_bands(df_bollinger, 20, 2)
+df_extra = databol[['date', 'high', 'low', 'close']]
+df_extra = df_extra.iloc[::-1]
+df_extra = bollinger_bands(df_extra, 20, 2)
 
-df_close = df_bollinger['close']
-df_date = df_bollinger['date']
-df_bu = df_bollinger['BU']
-df_bl = df_bollinger['BL']
-df_bma = df_bollinger['B_MA']
+df_close = df_extra['close']
+df_date = df_extra['date']
+df_bu = df_extra['BU']
+df_bl = df_extra['BL']
+df_bma = df_extra['B_MA']
 
 fig3 = go.Figure(
     data=[go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#1E405D', line_width=1)],
@@ -274,6 +297,10 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
                 line_width=1
     )
 )
+
+#
+df_SO = get_stochastic_oscillator(df_extra)
+st.table(df_SO)
 
 st.plotly_chart(fig3)
 
