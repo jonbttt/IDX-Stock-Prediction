@@ -240,7 +240,7 @@ df_bl = df_bollinger['BL']
 df_bma = df_bollinger['B_MA']
 
 fig3 = go.Figure(
-    data=[go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#C7437C', line_width=1)],
+    data=[go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#1E405D', line_width=1)],
     layout=go.Layout(
         title=go.layout.Title(text="Data with Bollinger Bands")
     )
@@ -249,7 +249,7 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
                 mode='lines',
                 name='Upper Bound',
                 line_shape='spline',
-                line_color='#7905A7',
+                line_color='#427BAE',
                 line_width=1
     )
 )
@@ -257,14 +257,14 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
                 mode='lines',
                 name='Lower Bound',
                 line_shape='spline',
-                line_color='#7905A7',
+                line_color='#427BAE',
                 line_width=1
     )
 )
 fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
                 mode='lines',
                 name='Moving Average',
-                line_color='#7905A7',
+                line_color='#427BAE',
                 line_width=1
     )
 )
