@@ -225,7 +225,7 @@ st.write()
 st.write('Forecast')
 fig1 = plot_plotly(m, forecast)
 fig1.update_yaxes(rangemode = "nonnegative")
-
+fig1.update_layout(yaxis_title=None, xaxis_title=None)
 st.plotly_chart(fig1)
 
 databol = data
