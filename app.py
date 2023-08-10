@@ -303,7 +303,28 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
 
 #
 df_SO = get_stochastic_oscillator(df_extra)
+df_fk = df_SO['fast_k']
+df_fd = df_SO['fast_d']
+df_sd = df_SO['slow_d']
 
+fig3.add_trace(go.Scatter(x=df_date, y=df_fk, # type: ignore
+                mode='lines',
+                name='Fast %K',
+                line_width=1
+    )
+)
+fig3.add_trace(go.Scatter(x=df_date, y=df_fd, # type: ignore
+                mode='lines',
+                name='Fast %D',
+                line_width=1
+    )
+)
+fig3.add_trace(go.Scatter(x=df_date, y=df_sd, # type: ignore
+                mode='lines',
+                name='Slow %D',
+                line_width=1
+    )
+)
 st.plotly_chart(fig3)
 
 st.write("Prophet forecast components")
