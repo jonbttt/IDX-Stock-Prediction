@@ -253,10 +253,10 @@ st.plotly_chart(fig1)
 
 databol = data
 try:
-    databol = databol.astype({"high": int, "low": int, "close": int})
+    databol = databol.astype({"high": int, "open": int, "low": int, "close": int})
 except ValueError:
-    databol = databol.astype({"high": float, "low": float, "close": float})
-    databol = databol.astype({"high": int, "low": int, "close": int})
+    databol = databol.astype({"high": float, "open": float, "low": float, "close": float})
+    databol = databol.astype({"high": int, "open": int, "low": int, "close": int})
 df_extra = databol[['date', 'open', 'high', 'low', 'close']]
 df_extra = df_extra.iloc[::-1]
 df_extra = bollinger_bands(df_extra, 20, 2)
