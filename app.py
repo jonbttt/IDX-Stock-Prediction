@@ -43,9 +43,9 @@ def bollinger_bands(df, n, m):
     TP = (df['high'] + df['low'] + df['close']) / 3
     df = df.merge(TP.rename('TP'), left_index=True, right_index=True)
     df = df.astype({"TP": int})
-    B_MA = df['TP'].rolling(n, min_periods=1).mean()
+    B_MA = df['TP'].rolling(n, min_periods=n).mean()
     df = df.merge(B_MA.rename('B_MA'), left_index=True, right_index=True)
-    sigma = df['TP'].rolling(n, min_periods=1).std()
+    sigma = df['TP'].rolling(n, min_periods=n).std()
     df = df.merge(sigma.rename('sigma'), left_index=True, right_index=True)
     BU = pd.Series((B_MA + m * sigma), name='BU')
     BL = pd.Series((B_MA - m * sigma), name='BL')
