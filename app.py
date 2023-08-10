@@ -282,7 +282,8 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
                 name='Upper Bound',
                 line_shape='spline',
                 line_color='#0072B2',
-                line_width=1
+                line_width=1,
+                fill='tonexty'
     )
 )
 fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
@@ -303,7 +304,6 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
 
 #
 df_SO = get_stochastic_oscillator(df_extra)
-st.table(df_SO)
 
 st.plotly_chart(fig3)
 
