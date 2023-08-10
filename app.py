@@ -268,7 +268,7 @@ df_bl = df_extra['BL']
 df_bma = df_extra['B_MA']
 
 fig3 = go.Figure(
-    data=[go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#1E405D', line_width=1)],
+    data=[go.Candlestick(x=df_date, y=df_close, name='Closing Price')],
     layout=go.Layout(
         title=go.layout.Title(text="Data with Bollinger Bands"),
         showlegend=False
