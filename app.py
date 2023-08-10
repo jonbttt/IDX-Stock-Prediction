@@ -229,7 +229,11 @@ fig1.update_yaxes(rangemode = "nonnegative")
 st.plotly_chart(fig1)
 
 databol = data
-databol = databol.astype({"high": int, "low": int, "close": int})
+try:
+    databol = databol.astype({"high": int, "low": int, "close": int})
+except ValueError:
+    databol = databol.astype({"high": float, "low": float, "close": float})
+    databol = databol.astype({"high": int, "low": int, "close": int})
 df_bollinger = databol[['date', 'high', 'low', 'close']]
 df_bollinger = bollinger_bands(df_bollinger, 20, 2)
 
