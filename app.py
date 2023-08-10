@@ -14,6 +14,9 @@ from plotly import graph_objs as go
 from prophet import Prophet
 from prophet.plot import plot_plotly
 
+apikey = st.secrets["apikey"]
+#apikey = st.text_input('Input API key')
+
 def get_st_button_a_tag(url_link, button_name):
     """
     generate html a tag
@@ -35,24 +38,23 @@ def get_st_button_a_tag(url_link, button_name):
     backgroundColor: #262730;
     border: 2px solid rgb(59, 60, 68);">{button_name}</button></a>
     '''
-#
+
 def bollinger_bands(df, n, m):
-    TP = (df['High'] + df['Low'] + df['Close']) / 3
-    data = TP
-    B_MA = pd.Series((data.rolling(n, min_periods=n).mean()), name='B_MA')
-    sigma = data.rolling(n, min_periods=n).std() 
-    
+    TP = (df['high'] + df['low'] + df['close']) / 3
+    df = df.merge(TP.rename('TP'), left_index=True, right_index=True)
+    df = df.astype({"TP": int})
+    B_MA = df['TP'].rolling(n, min_periods=1).mean()
+    df = df.merge(B_MA.rename('B_MA'), left_index=True, right_index=True)
+    sigma = df['TP'].rolling(n, min_periods=1).std()
+    df = df.merge(sigma.rename('sigma'), left_index=True, right_index=True)
     BU = pd.Series((B_MA + m * sigma), name='BU')
     BL = pd.Series((B_MA - m * sigma), name='BL')
-    
-    df = df.join(B_MA)
-    df = df.join(BU)
-    df = df.join(BL)
+    df = df.merge(BU.rename('BU'), left_index=True, right_index=True)
+    df = df.merge(BL.rename('BL'), left_index=True, right_index=True)
     
     return df
-#
-apikey = st.secrets["apikey"]
-#apikey = st.text_input('Input API key')
+
+apikey = 'y6q1RZG9GoOeA681EQpBFSgesCuel1'
 
 buffer = BytesIO()
 c = pycurl.Curl()
@@ -73,34 +75,31 @@ dict1 = json.loads(data1)
 buffer.seek(0)
 buffer.truncate(0)
 
-try:
-    gainerjson = 'https://api.goapi.id/v1/stock/idx/top_gainer?api_key='+apikey
-    c.setopt(pycurl.HTTPHEADER, custom_headers)
-    c.setopt(pycurl.URL, gainerjson)
-    c.setopt(pycurl.WRITEDATA, buffer)
-    c.setopt(pycurl.CAINFO, certifi.where())
-    c.perform()
-    
-    gainers = buffer.getvalue()
-    datagainer = gainers.decode('iso-8859-1')
-    dictgainer = json.loads(datagainer)
-    buffer.seek(0)
-    buffer.truncate(0)
-    
-    loserjson = 'https://api.goapi.id/v1/stock/idx/top_loser?api_key='+apikey
-    c.setopt(pycurl.HTTPHEADER, custom_headers)
-    c.setopt(pycurl.URL, loserjson)
-    c.setopt(pycurl.WRITEDATA, buffer)
-    c.setopt(pycurl.CAINFO, certifi.where())
-    c.perform()
-    
-    losers = buffer.getvalue()
-    dataloser = losers.decode('iso-8859-1')
-    dictloser = json.loads(dataloser)
-    buffer.seek(0)
-    buffer.truncate(0)
-except KeyError:
-    pass
+gainerjson = 'https://api.goapi.id/v1/stock/idx/top_gainer?api_key='+apikey
+c.setopt(pycurl.HTTPHEADER, custom_headers)
+c.setopt(pycurl.URL, gainerjson)
+c.setopt(pycurl.WRITEDATA, buffer)
+c.setopt(pycurl.CAINFO, certifi.where())
+c.perform()
+
+gainers = buffer.getvalue()
+datagainer = gainers.decode('iso-8859-1')
+dictgainer = json.loads(datagainer)
+buffer.seek(0)
+buffer.truncate(0)
+
+loserjson = 'https://api.goapi.id/v1/stock/idx/top_loser?api_key='+apikey
+c.setopt(pycurl.HTTPHEADER, custom_headers)
+c.setopt(pycurl.URL, loserjson)
+c.setopt(pycurl.WRITEDATA, buffer)
+c.setopt(pycurl.CAINFO, certifi.where())
+c.perform()
+
+losers = buffer.getvalue()
+dataloser = losers.decode('iso-8859-1')
+dictloser = json.loads(dataloser)
+buffer.seek(0)
+buffer.truncate(0)
 
 with st.sidebar:
   tab1, tab2, tab3 = st.tabs(["Gainers", "Losers", "News"])
@@ -178,15 +177,14 @@ with st.sidebar:
     except IndexError:
       pass
 
-try:
-  dict1 = dict1["data"]
-  dict1 = dict1["results"]
-  df_ticker = pd.DataFrame.from_dict(dict1)
-  df_ticker = df_ticker[['ticker', 'name']]
-  selectlist = df_ticker.values.tolist()
-  selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
-except (NameError, KeyError, ValueError):
-  pass
+
+dict1 = dict1["data"]
+dict1 = dict1["results"]
+df_ticker = pd.DataFrame.from_dict(dict1)
+df_ticker = df_ticker[['ticker', 'name']]
+selectlist = df_ticker.values.tolist()
+selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
+
 
 ticker = st.selectbox('Input ticker', selectlist) # type: ignore
 ticker = str(ticker)
@@ -206,63 +204,67 @@ c.close()
 body = buffer.getvalue()
 data2 = body.decode('iso-8859-1')
 dict = json.loads(data2)
+buffer.seek(0)
+buffer.truncate(0)
 
-try:
-  dict = dict["data"]
-  dict = dict["results"]
-  data = pd.DataFrame.from_dict(dict)
-  #
-  df_bollinger = data[['date', 'high', 'low', 'close']]
-  df_bollinger = bollinger_bands(df_bollinger, 20, 2)
-  df_date = df_bollinger['date']
-  df_bu = df_bollinger['BU']
-  df_bl = df_bollinger['BL']
-  df_bma = df_bollinger['B_MA']
-  #
-  df_train = data[['date', 'close']]
-  df_train = df_train.rename(columns={"date": "ds", "close": "y"})
-  df_train['floor'] = 0
-except (NameError, KeyError, ValueError):
-  pass
+dict = dict["data"]
+dict = dict["results"]
+data = pd.DataFrame.from_dict(dict)
+df_train = data[['date', 'close']]
+df_train = df_train.rename(columns={"date": "ds", "close": "y"})
+df_train['floor'] = 0
 
 period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
 
-try:
-  m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
-  m.fit(df_train) # type: ignore
-  future = m.make_future_dataframe(periods=period)
-  future['floor'] = 0
-  forecast = m.predict(future)
-  st.write()
-  st.write('Forecast')
-  fig1 = plot_plotly(m, forecast)
-  fig1.update_yaxes(rangemode = "nonnegative")
-  
-  st.plotly_chart(fig1)
-  #
-  bollingerdict = dict({
-    "data": [{"type": "bar",
-              "x": df_date, # type: ignore
-              "y": df_bu}], # type: ignore
-    "layout": {"title": {"text": "Bollinger Bands"}}
-})
-  fig3 = go.Figure(bollingerdict)
-  
-  fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
-                    mode='lines',
-                    name='lines'))
-  fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
-                    mode='lines',
-                    name='lines'))
-  fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
-                    mode='lines',
-                    name='lines'))
-  
-  st.plotly_chart(fig3)
-  #
-  
-  st.write("Prophet forecast components")
-  fig2 = m.plot_components(forecast)
-  st.write(fig2)
-except (NameError, TypeError, KeyError, ValueError):
-  pass
+m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
+m.fit(df_train) # type: ignore
+future = m.make_future_dataframe(periods=period)
+future['floor'] = 0
+forecast = m.predict(future)
+st.write()
+st.write('Forecast')
+fig1 = plot_plotly(m, forecast)
+fig1.update_yaxes(rangemode = "nonnegative")
+
+st.plotly_chart(fig1)
+
+databol = data
+databol = databol.astype({"high": int, "low": int, "close": int})
+df_bollinger = databol[['date', 'high', 'low', 'close']]
+df_bollinger = bollinger_bands(df_bollinger, 20, 2)
+
+df_close = df_bollinger['close']
+df_date = df_bollinger['date']
+df_bu = df_bollinger['BU']
+df_bl = df_bollinger['BL']
+df_bma = df_bollinger['B_MA']
+
+fig3 = go.Figure(
+    data=[go.Scatter(x=df_date, y=df_close, name='Closing Price')],
+    layout=go.Layout(
+        title=go.layout.Title(text="Data with Bollinger Bands")
+    )
+)
+fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
+                mode='lines',
+                name='Upper Bound',
+                line_shape='spline'
+    )
+)
+fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
+                mode='lines',
+                name='Lower Bound',
+                line_shape='spline'
+    )
+)
+fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
+                mode='lines',
+                name='Moving Average'
+    )
+)
+
+st.plotly_chart(fig3)
+
+st.write("Prophet forecast components")
+fig2 = m.plot_components(forecast)
+st.write(fig2)
