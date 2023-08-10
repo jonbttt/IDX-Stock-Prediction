@@ -261,6 +261,9 @@ df_extra = databol[['date', 'high', 'low', 'close']]
 df_extra = df_extra.iloc[::-1]
 df_extra = bollinger_bands(df_extra, 20, 2)
 
+df_open = df_extra['open']
+df_low = df_extra['low']
+df_high = df_extra['high']
 df_close = df_extra['close']
 df_date = df_extra['date']
 df_bu = df_extra['BU']
@@ -268,7 +271,7 @@ df_bl = df_extra['BL']
 df_bma = df_extra['B_MA']
 
 fig3 = go.Figure(
-    data=[go.Candlestick(x=df_date, y=df_close, name='Closing Price')],
+    data=[go.Candlestick(x=df_date, open=df_open, high=df_high, low=df_low, close=df_close, name='Closing Price')],
     layout=go.Layout(
         title=go.layout.Title(text="Data with Bollinger Bands"),
         showlegend=False
