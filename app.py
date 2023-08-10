@@ -282,8 +282,7 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
                 name='Upper Bound',
                 line_shape='spline',
                 line_color='#0072B2',
-                line_width=1,
-                fill='tonexty'
+                line_width=1
     )
 )
 fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
