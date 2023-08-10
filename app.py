@@ -249,7 +249,7 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
                 mode='lines',
                 name='Upper Bound',
                 line_shape='spline',
-                line_color='#427BAE',
+                line_color='#0072B2',
                 line_width=1
     )
 )
@@ -257,14 +257,14 @@ fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
                 mode='lines',
                 name='Lower Bound',
                 line_shape='spline',
-                line_color='#427BAE',
+                line_color='#0072B2',
                 line_width=1
     )
 )
 fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
                 mode='lines',
                 name='Moving Average',
-                line_color='#427BAE',
+                line_color='#0072B2',
                 line_width=1
     )
 )
