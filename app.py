@@ -71,10 +71,6 @@ def get_stochastic_oscillator(df, period=14):
                 n += 1
             df.at[i, 'best_low'] = low
             df.at[i, 'best_high'] = high
-            try:
-                df.astype({"best_high": int, "best_low": int})
-            except IntCastingNaNError: # type: ignore
-                pass
             df.at[i, 'fast_k'] = 100*((df.iloc[i]['close']-df.iloc[i]['best_low'])/(df.iloc[i]['best_high']-df.iloc[i]['best_low']))
 
     df['fast_d'] = df['fast_k'].rolling(3).mean().round(2)
