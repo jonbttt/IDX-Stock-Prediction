@@ -5,6 +5,8 @@ apikey = st.secrets['apikey']
 import certifi
 import json
 import pandas as pd
+import pandas_ta as ta
+import plotly.offline as pyo
 import pycurl
 import re
 import requests
@@ -14,6 +16,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from io import BytesIO
 from plotly import graph_objs as go
+from plotly.subplots import make_subplots
 from prophet import Prophet
 from prophet.plot import plot_plotly
 
@@ -71,11 +74,13 @@ def get_stochastic_oscillator(df, period=14):
                 n += 1
             df.at[i, 'best_low'] = low
             df.at[i, 'best_high'] = high
+           
+            df['best_low'] = df['best_low'].round(0).astype('Int64')
+            df['best_high'] = df['best_high'].round(0).astype('Int64')
             df.at[i, 'fast_k'] = 100*((df.iloc[i]['close']-df.iloc[i]['best_low'])/(df.iloc[i]['best_high']-df.iloc[i]['best_low']))
-
-    df['fast_d'] = df['fast_k'].rolling(3).mean().round(2)
+    df['fast_d'] = df['fast_k'].rolling(3, min_periods=3).mean().round(2)
     df['slow_k'] = df['fast_d']
-    df['slow_d'] = df['slow_k'].rolling(3).mean().round(2)
+    df['slow_d'] = df['slow_k'].rolling(3, min_periods=3).mean().round(2)
 
     return df
 
@@ -270,63 +275,54 @@ df_bu = df_extra['BU']
 df_bl = df_extra['BL']
 df_bma = df_extra['B_MA']
 
-fig3 = go.Figure(
-    data=[go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')],
-    layout=go.Layout(
-        title=go.layout.Title(text="Data with Bollinger Bands"),
-        showlegend=False
-    )
-)
-fig3.add_trace(go.Scatter(x=df_date, y=df_bu, # type: ignore
+fig3 = make_subplots(rows=2, cols=1, shared_xaxes=True)
+trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
+trace2 = go.Scatter(x=df_date, y=df_bu, # type: ignore
                 mode='lines',
                 name='Upper Bound',
                 line_shape='spline',
                 line_color='#0072B2',
                 line_width=1
     )
-)
-fig3.add_trace(go.Scatter(x=df_date, y=df_bl, # type: ignore
+trace3 = go.Scatter(x=df_date, y=df_bl, # type: ignore
                 mode='lines',
                 name='Lower Bound',
                 line_shape='spline',
                 line_color='#0072B2',
                 line_width=1
     )
-)
-fig3.add_trace(go.Scatter(x=df_date, y=df_bma, # type: ignore
+trace4 = go.Scatter(x=df_date, y=df_bma, # type: ignore
                 mode='lines',
                 name='Moving Average',
                 line_color='#0072B2',
                 line_width=1
     )
-)
 
-#
-df_SO = get_stochastic_oscillator(df_extra)
-df_fk = df_SO['fast_k']
-df_fd = df_SO['fast_d']
-df_sd = df_SO['slow_d']
+df_extra.ta.stoch(high='high', low='low', k=14, d=3, append=True)
+st.table(df_extra)
 
-fig3.add_trace(go.Scatter(x=df_date, y=df_fk, # type: ignore
+df_k = df_extra['STOCHk_14_3_3']
+df_d = df_extra['STOCHd_14_3_3']
+
+trace5 = go.Scatter(x=df_date, y=df_k, # type: ignore
                 mode='lines',
-                name='Fast %K',
+                name='%K',
                 line_width=1
     )
-)
-fig3.add_trace(go.Scatter(x=df_date, y=df_fd, # type: ignore
+trace6 = go.Scatter(x=df_date, y=df_d, # type: ignore
                 mode='lines',
-                name='Fast %D',
+                name='%D',
                 line_width=1
     )
-)
-fig3.add_trace(go.Scatter(x=df_date, y=df_sd, # type: ignore
-                mode='lines',
-                name='Slow %D',
-                line_width=1
-    )
-)
+fig3.add_trace(trace1,1,1)
+fig3.add_trace(trace2,1,1)
+fig3.add_trace(trace3,1,1)
+fig3.add_trace(trace4,1,1)
+fig3.add_trace(trace5,2,1)
+fig3.add_trace(trace6,2,1)
+
 st.plotly_chart(fig3)
-st.table(df_SO)
+
 st.write("Prophet forecast components")
 fig2 = m.plot_components(forecast)
 st.write(fig2)
