@@ -299,7 +299,6 @@ trace4 = go.Scatter(x=df_date, y=df_bma, # type: ignore
     )
 
 df_extra.ta.stoch(high='high', low='low', k=14, d=3, append=True)
-st.table(df_extra)
 
 df_k = df_extra['STOCHk_14_3_3']
 df_d = df_extra['STOCHd_14_3_3']
