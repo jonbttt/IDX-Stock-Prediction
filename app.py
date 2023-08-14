@@ -281,8 +281,8 @@ with tab2:
     df_bma = df_extra['B_MA']
 
     fig3 = make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[1, 1, 1, 1, 1], 
-                         subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "Relative Strength Index (RSI)", "StochRSI", "Moving Average Convergence/Divergence (MACD)"), height=1000)
-    fig3.update_layout(showlegend=False)
+                         subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "Relative Strength Index (RSI)", "StochRSI", "Moving Average Convergence/Divergence (MACD)"))
+    fig3.update_layout(showlegend=False, height=1500)
     
     trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
     trace2 = go.Scatter(x=df_date, y=df_bu, # type: ignore
