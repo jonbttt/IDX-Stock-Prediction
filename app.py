@@ -280,7 +280,7 @@ with tab2:
     df_bl = df_extra['BL']
     df_bma = df_extra['B_MA']
 
-    fig3 = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.8, 0.2], 
+    fig3 = make_subplots(rows=3, cols=1, shared_xaxes=True, row_heights=[0.8, 0.2], 
                          subplot_titles=("Bollinger Bands", "Stochastic Oscillator"))
     fig3.update_layout(showlegend=False)
     trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
@@ -320,6 +320,11 @@ with tab2:
                     name='%D',
                     line_width=1
         )
+    
+    df_extra.ta.RSIIndicator(close='close', append=True)
+    
+    st.table(df_extra)
+    
     fig3.add_trace(trace1,1,1)
     fig3.add_trace(trace2,1,1)
     fig3.add_trace(trace3,1,1)
