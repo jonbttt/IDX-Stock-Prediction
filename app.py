@@ -280,7 +280,7 @@ with tab2:
     df_bl = df_extra['BL']
     df_bma = df_extra['B_MA']
 
-    fig3 = make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[1, 0.75, 0.75, 0.75, 0.75], 
+    fig3 = make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[1, 0.75, 0.75, 0.75, 0.75], vertical_spacing=0.05,
                          subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "Relative Strength Index (RSI)", "StochRSI", "Moving Average Convergence/Divergence (MACD)"))
     fig3.update_layout(showlegend=False, height=1200)
     
