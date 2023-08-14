@@ -280,7 +280,7 @@ with tab2:
     df_bl = df_extra['BL']
     df_bma = df_extra['B_MA']
 
-    fig3 = make_subplots(rows=3, cols=1, shared_xaxes=True, row_heights=[0.6, 0.2, 0.2], 
+    fig3 = make_subplots(rows=3, cols=1, shared_xaxes=True, row_heights=[1, 1, 1], 
                          subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "RSI"))
     fig3.update_layout(showlegend=False)
     trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
