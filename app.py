@@ -244,7 +244,7 @@ df_train['floor'] = 0
 
 period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
 
-tab1, tab2 = st.tabs(["Forecasting", "Analysis"])
+tab1, tab2 = st.tabs(["Forecasting", "Indicators"])
 with tab1:
     m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
     m.fit(df_train) # type: ignore
@@ -281,7 +281,7 @@ with tab2:
     df_bma = df_extra['B_MA']
 
     fig3 = make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[1, 1, 1, 1, 1], 
-                         subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "RSI"))
+                         subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "Relative Strength Index (RSI)", "StochRSI", "Moving Average Convergence/Divergence (MACD)"))
     fig3.update_layout(showlegend=False)
     
     trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
