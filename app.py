@@ -321,7 +321,7 @@ with tab2:
                     line_width=1
         )
     
-    df_extra.ta.RSIIndicator(close='close', append=True)
+    df_extra.ta.rsi(close='close', append=True)
     
     st.table(df_extra)
     
