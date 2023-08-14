@@ -366,8 +366,6 @@ with tab2:
                     line_width=1
         )
     
-    st.table(df_extra)
-    
     fig3.add_trace(trace1,1,1)
     fig3.add_trace(trace2,1,1)
     fig3.add_trace(trace3,1,1)
