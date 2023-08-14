@@ -339,7 +339,7 @@ with tab2:
                     line_width=1
         )
     
-    df_extra.ta.MACD(close='close', append=True)
+    df_extra.ta.macd(close='close', append=True)
     df_M = df_extra['RSI_14']
     
     trace9 = go.Scatter(x=df_date, y=df_M, # type: ignore
