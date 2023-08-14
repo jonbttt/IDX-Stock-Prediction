@@ -280,9 +280,10 @@ with tab2:
     df_bl = df_extra['BL']
     df_bma = df_extra['B_MA']
 
-    fig3 = make_subplots(rows=3, cols=1, shared_xaxes=True, row_heights=[1, 1, 1], 
+    fig3 = make_subplots(rows=5, cols=1, shared_xaxes=True, row_heights=[1, 1, 1, 1, 1], 
                          subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "RSI"))
     fig3.update_layout(showlegend=False)
+    
     trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
     trace2 = go.Scatter(x=df_date, y=df_bu, # type: ignore
                     mode='lines',
@@ -306,7 +307,6 @@ with tab2:
         )
 
     df_extra.ta.stoch(high='high', low='low', k=14, d=3, append=True)
-
     df_k = df_extra['STOCHk_14_3_3']
     df_d = df_extra['STOCHd_14_3_3']
 
@@ -322,14 +322,33 @@ with tab2:
         )
     
     df_extra.ta.rsi(close='close', append=True)
+    df_R = df_extra['RSI_14']
     
-    df_RSI = df_extra['RSI_14']
-    
-    trace7 = go.Scatter(x=df_date, y=df_RSI, # type: ignore
+    trace7 = go.Scatter(x=df_date, y=df_R, # type: ignore
                     mode='lines',
                     name='RSI',
                     line_width=1
         )
+    
+    df_extra.ta.stochrsi(close='close', append=True)
+    df_SR = df_extra['RSI_14']
+    
+    trace8 = go.Scatter(x=df_date, y=df_SR, # type: ignore
+                    mode='lines',
+                    name='StochRSI',
+                    line_width=1
+        )
+    
+    df_extra.ta.MACD(close='close', append=True)
+    df_M = df_extra['RSI_14']
+    
+    trace9 = go.Scatter(x=df_date, y=df_M, # type: ignore
+                    mode='lines',
+                    name='MACD',
+                    line_width=1
+        )
+    
+    st.table(df_extra)
     
     fig3.add_trace(trace1,1,1)
     fig3.add_trace(trace2,1,1)
@@ -338,6 +357,8 @@ with tab2:
     fig3.add_trace(trace5,2,1)
     fig3.add_trace(trace6,2,1)
     fig3.add_trace(trace7,3,1)
+    fig3.add_trace(trace8,4,1)
+    fig3.add_trace(trace9,5,1)
     fig3.add_shape(type="rect",
         xref="x2", yref="y2",
         x0=df_date.iloc[0], y0=80,
