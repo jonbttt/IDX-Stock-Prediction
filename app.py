@@ -251,8 +251,6 @@ with tab1:
     future = m.make_future_dataframe(periods=period)
     future['floor'] = 0
     forecast = m.predict(future)
-    st.write()
-    st.write('Forecast')
     fig1 = plot_plotly(m, forecast)
     fig1.update_yaxes(rangemode = "nonnegative")
     fig1.update_layout(yaxis_title=None, xaxis_title=None)
