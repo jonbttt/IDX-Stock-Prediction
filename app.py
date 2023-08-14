@@ -280,8 +280,8 @@ with tab2:
     df_bl = df_extra['BL']
     df_bma = df_extra['B_MA']
 
-    fig3 = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.8, 0.2], 
-                         subplot_titles=("Bollinger Bands", "Stochastic Oscillator"))
+    fig3 = make_subplots(rows=3, cols=1, shared_xaxes=True, row_heights=[0.6, 0.2, 0.2], 
+                         subplot_titles=("Bollinger Bands", "Stochastic Oscillator", "RSI"))
     fig3.update_layout(showlegend=False)
     trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
     trace2 = go.Scatter(x=df_date, y=df_bu, # type: ignore
@@ -323,7 +323,13 @@ with tab2:
     
     df_extra.ta.rsi(close='close', append=True)
     
-    st.table(df_extra)
+    df_RSI = df_extra['RSI_14']
+    
+    trace7 = go.Scatter(x=df_date, y=df_RSI, # type: ignore
+                    mode='lines',
+                    name='RSI',
+                    line_width=1
+        )
     
     fig3.add_trace(trace1,1,1)
     fig3.add_trace(trace2,1,1)
@@ -331,6 +337,7 @@ with tab2:
     fig3.add_trace(trace4,1,1)
     fig3.add_trace(trace5,2,1)
     fig3.add_trace(trace6,2,1)
+    fig3.add_trace(trace7,3,1)
     fig3.add_shape(type="rect",
         xref="x2", yref="y2",
         x0=df_date.iloc[0], y0=80,
