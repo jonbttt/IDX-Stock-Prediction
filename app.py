@@ -243,9 +243,9 @@ df_train = df_train.rename(columns={"date": "ds", "close": "y"})
 df_train['floor'] = 0
 
 period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
-with st.sidebar:
-  tab1, tab2 = st.tabs(["Forecasting", "Analysis"])
-  with tab1:
+
+tab1, tab2 = st.tabs(["Forecasting", "Analysis"])
+with tab1:
     m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
     m.fit(df_train) # type: ignore
     future = m.make_future_dataframe(periods=period)
@@ -261,8 +261,8 @@ with st.sidebar:
     st.write("Prophet forecast components")
     fig2 = m.plot_components(forecast)
     st.write(fig2)
-    
-  with tab2:
+
+with tab2:
     databol = data
     try:
         databol = databol.astype({"high": int, "open": int, "low": int, "close": int})
