@@ -331,20 +331,38 @@ with tab2:
         )
     
     df_extra.ta.stochrsi(close='close', append=True)
-    df_SR = df_extra['RSI_14']
+    df_SRk = df_extra['STOCHRSIk_14_14_3_3']
+    df_SRd = df_extra['STOCHRSId_14_14_3_3']
     
-    trace8 = go.Scatter(x=df_date, y=df_SR, # type: ignore
+    trace8 = go.Scatter(x=df_date, y=df_SRk, # type: ignore
                     mode='lines',
-                    name='StochRSI',
+                    name='StochRSIk',
+                    line_width=1
+        )
+    trace9 = go.Scatter(x=df_date, y=df_SRd, # type: ignore
+                    mode='lines',
+                    name='StochRSId',
                     line_width=1
         )
     
     df_extra.ta.macd(close='close', append=True)
-    df_M = df_extra['RSI_14']
+    df_M = df_extra['MACD_12_26_9']
+    df_Mh = df_extra['MACDh_12_26_9']
+    df_Ms = df_extra['MACDs_12_26_9']
     
-    trace9 = go.Scatter(x=df_date, y=df_M, # type: ignore
+    trace10 = go.Scatter(x=df_date, y=df_M, # type: ignore
                     mode='lines',
                     name='MACD',
+                    line_width=1
+        )
+    trace11 = go.Scatter(x=df_date, y=df_Mh, # type: ignore
+                    mode='lines',
+                    name='MACDh',
+                    line_width=1
+        )
+    trace12 = go.Scatter(x=df_date, y=df_Ms, # type: ignore
+                    mode='lines',
+                    name='MACDs',
                     line_width=1
         )
     
@@ -358,7 +376,10 @@ with tab2:
     fig3.add_trace(trace6,2,1)
     fig3.add_trace(trace7,3,1)
     fig3.add_trace(trace8,4,1)
-    fig3.add_trace(trace9,5,1)
+    fig3.add_trace(trace9,4,1)
+    fig3.add_trace(trace10,5,1)
+    fig3.add_trace(trace11,5,1)
+    fig3.add_trace(trace12,5,1)
     fig3.add_shape(type="rect",
         xref="x2", yref="y2",
         x0=df_date.iloc[0], y0=80,
