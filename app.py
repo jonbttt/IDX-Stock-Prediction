@@ -243,101 +243,104 @@ df_train = df_train.rename(columns={"date": "ds", "close": "y"})
 df_train['floor'] = 0
 
 period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
+with st.sidebar:
+  tab1, tab2 = st.tabs(["Forecasting", "Analysis"])
+  with tab1:
+    m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
+    m.fit(df_train) # type: ignore
+    future = m.make_future_dataframe(periods=period)
+    future['floor'] = 0
+    forecast = m.predict(future)
+    st.write()
+    st.write('Forecast')
+    fig1 = plot_plotly(m, forecast)
+    fig1.update_yaxes(rangemode = "nonnegative")
+    fig1.update_layout(yaxis_title=None, xaxis_title=None)
+    st.plotly_chart(fig1)
+        
+    st.write("Prophet forecast components")
+    fig2 = m.plot_components(forecast)
+    st.write(fig2)
+    
+  with tab2:
+    databol = data
+    try:
+        databol = databol.astype({"high": int, "open": int, "low": int, "close": int})
+    except ValueError:
+        databol = databol.astype({"high": float, "open": float, "low": float, "close": float})
+        databol = databol.astype({"high": int, "open": int, "low": int, "close": int})
+    df_extra = databol[['date', 'open', 'high', 'low', 'close']]
+    df_extra = df_extra.iloc[::-1]
+    df_extra = bollinger_bands(df_extra, 20, 2)
 
-m = Prophet(daily_seasonality=True, yearly_seasonality=True) # type: ignore
-m.fit(df_train) # type: ignore
-future = m.make_future_dataframe(periods=period)
-future['floor'] = 0
-forecast = m.predict(future)
-st.write()
-st.write('Forecast')
-fig1 = plot_plotly(m, forecast)
-fig1.update_yaxes(rangemode = "nonnegative")
-fig1.update_layout(yaxis_title=None, xaxis_title=None)
-st.plotly_chart(fig1)
+    df_open = df_extra['open']
+    df_low = df_extra['low']
+    df_high = df_extra['high']
+    df_close = df_extra['close']
+    df_date = df_extra['date']
+    df_bu = df_extra['BU']
+    df_bl = df_extra['BL']
+    df_bma = df_extra['B_MA']
 
-databol = data
-try:
-    databol = databol.astype({"high": int, "open": int, "low": int, "close": int})
-except ValueError:
-    databol = databol.astype({"high": float, "open": float, "low": float, "close": float})
-    databol = databol.astype({"high": int, "open": int, "low": int, "close": int})
-df_extra = databol[['date', 'open', 'high', 'low', 'close']]
-df_extra = df_extra.iloc[::-1]
-df_extra = bollinger_bands(df_extra, 20, 2)
+    fig3 = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.8, 0.2])
+    fig3.update_layout(showlegend=False)
+    trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
+    trace2 = go.Scatter(x=df_date, y=df_bu, # type: ignore
+                    mode='lines',
+                    name='Upper Bound',
+                    line_shape='spline',
+                    line_color='#0072B2',
+                    line_width=1
+        )
+    trace3 = go.Scatter(x=df_date, y=df_bl, # type: ignore
+                    mode='lines',
+                    name='Lower Bound',
+                    line_shape='spline',
+                    line_color='#0072B2',
+                    line_width=1
+        )
+    trace4 = go.Scatter(x=df_date, y=df_bma, # type: ignore
+                    mode='lines',
+                    name='Moving Average',
+                    line_color='#0072B2',
+                    line_width=1
+        )
 
-df_open = df_extra['open']
-df_low = df_extra['low']
-df_high = df_extra['high']
-df_close = df_extra['close']
-df_date = df_extra['date']
-df_bu = df_extra['BU']
-df_bl = df_extra['BL']
-df_bma = df_extra['B_MA']
+    df_extra.ta.stoch(high='high', low='low', k=14, d=3, append=True)
 
-fig3 = make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.8, 0.2])
-fig3.update_layout(showlegend=False)
-trace1 = go.Scatter(x=df_date, y=df_close, name='Closing Price', line_color='#A5D6FF')
-trace2 = go.Scatter(x=df_date, y=df_bu, # type: ignore
-                mode='lines',
-                name='Upper Bound',
-                line_shape='spline',
-                line_color='#0072B2',
-                line_width=1
+    df_k = df_extra['STOCHk_14_3_3']
+    df_d = df_extra['STOCHd_14_3_3']
+
+    trace5 = go.Scatter(x=df_date, y=df_k, # type: ignore
+                    mode='lines',
+                    name='%K',
+                    line_width=1
+        )
+    trace6 = go.Scatter(x=df_date, y=df_d, # type: ignore
+                    mode='lines',
+                    name='%D',
+                    line_width=1
+        )
+    fig3.add_trace(trace1,1,1)
+    fig3.add_trace(trace2,1,1)
+    fig3.add_trace(trace3,1,1)
+    fig3.add_trace(trace4,1,1)
+    fig3.add_trace(trace5,2,1)
+    fig3.add_trace(trace6,2,1)
+    fig3.add_shape(type="rect",
+        xref="x2", yref="y2",
+        x0=df_date.iloc[0], y0=80,
+        x1=today, y1=100,
+        fillcolor="rgba(165, 214, 255, 0.5)",
+        line_width=0,
+        line_color="rgba(165, 214, 255, 0.5)"
     )
-trace3 = go.Scatter(x=df_date, y=df_bl, # type: ignore
-                mode='lines',
-                name='Lower Bound',
-                line_shape='spline',
-                line_color='#0072B2',
-                line_width=1
+    fig3.add_shape(type="rect",
+        xref="x2", yref="y2",
+        x0=df_date.iloc[0], y0=0,
+        x1=today, y1=20,
+        fillcolor="rgba(165, 214, 255, 0.5)",
+        line_width=0,
+        line_color="rgba(165, 214, 255, 0.5)"
     )
-trace4 = go.Scatter(x=df_date, y=df_bma, # type: ignore
-                mode='lines',
-                name='Moving Average',
-                line_color='#0072B2',
-                line_width=1
-    )
-
-df_extra.ta.stoch(high='high', low='low', k=14, d=3, append=True)
-
-df_k = df_extra['STOCHk_14_3_3']
-df_d = df_extra['STOCHd_14_3_3']
-
-trace5 = go.Scatter(x=df_date, y=df_k, # type: ignore
-                mode='lines',
-                name='%K',
-                line_width=1
-    )
-trace6 = go.Scatter(x=df_date, y=df_d, # type: ignore
-                mode='lines',
-                name='%D',
-                line_width=1
-    )
-fig3.add_trace(trace1,1,1)
-fig3.add_trace(trace2,1,1)
-fig3.add_trace(trace3,1,1)
-fig3.add_trace(trace4,1,1)
-fig3.add_trace(trace5,2,1)
-fig3.add_trace(trace6,2,1)
-fig3.add_shape(type="rect",
-    xref="x2", yref="y2",
-    x0=df_date.iloc[0], y0=80,
-    x1=today, y1=100,
-    fillcolor="rgba(165, 214, 255, 0.5)",
-    line_width=0,
-    line_color="rgba(165, 214, 255, 0.5)"
-)
-fig3.add_shape(type="rect",
-    xref="x2", yref="y2",
-    x0=df_date.iloc[0], y0=0,
-    x1=today, y1=20,
-    fillcolor="rgba(165, 214, 255, 0.5)",
-    line_width=0,
-    line_color="rgba(165, 214, 255, 0.5)"
-)
-st.plotly_chart(fig3)
-
-st.write("Prophet forecast components")
-fig2 = m.plot_components(forecast)
-st.write(fig2)
+    st.plotly_chart(fig3)
