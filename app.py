@@ -84,7 +84,7 @@ custom_headers = ['User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0
 today = date.today().strftime("%Y-%m-%d")
 
 st.title('IDX Stock Prediction')
-apikey = st.text_input('Input API key')
+apikey = st.text_input('Custom API key')
 if not apikey:
     apikey = st.secrets['apikey']
 tickerlist = 'https://api.goapi.id/v1/stock/idx/companies?api_key='+apikey
