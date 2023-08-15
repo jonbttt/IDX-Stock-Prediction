@@ -394,4 +394,21 @@ with tab2:
         line_width=0,
         line_color="rgba(165, 214, 255, 0.1)"
     )
+    fig3.add_shape(type="rect",
+        xref="x3", yref="y3",
+        x0=df_date.iloc[0], y0=70,
+        x1=today, y1=100,
+        fillcolor="rgba(165, 214, 255, 0.1)",
+        line_width=0,
+        line_color="rgba(165, 214, 255, 0.1)"
+    )
+    fig3.add_shape(type="rect",
+        xref="x3", yref="y3",
+        x0=df_date.iloc[0], y0=0,
+        x1=today, y1=30,
+        fillcolor="rgba(165, 214, 255, 0.1)",
+        line_width=0,
+        line_color="rgba(165, 214, 255, 0.1)"
+    )
+    
     st.plotly_chart(fig3)
