@@ -1,6 +1,6 @@
 import streamlit as st
 apikey = st.secrets['apikey']
-#apikey = ''
+apikey = st.text_input('Custom API key')
 
 import certifi
 import json
