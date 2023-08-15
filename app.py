@@ -406,9 +406,9 @@ with tab2:
         xref="x3", yref="y3",
         x0=df_date.iloc[0], y0=0,
         x1=today, y1=30,
-        fillcolor="rgba(165, 214, 255, 0.1)",
+        fillcolor="rgba(255, 135, 0, 0.1)",
         line_width=0,
-        line_color="rgba(165, 214, 255, 0.1)"
+        line_color="rgba(255, 135, 0, 0.1)"
     )
     
     st.plotly_chart(fig3)
