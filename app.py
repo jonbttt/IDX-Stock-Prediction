@@ -1,7 +1,3 @@
-import streamlit as st
-apikey = st.secrets['apikey']
-apikey = st.text_input('Custom API key')
-
 import certifi
 import json
 import pandas as pd
@@ -10,6 +6,7 @@ import plotly.offline as pyo
 import pycurl
 import re
 import requests
+import streamlit as st
 from streamlit.components.v1 import html
 from bs4 import BeautifulSoup
 from datetime import date
@@ -19,9 +16,6 @@ from plotly import graph_objs as go
 from plotly.subplots import make_subplots
 from prophet import Prophet
 from prophet.plot import plot_plotly
-
-apikey = st.secrets["apikey"]
-#apikey = st.text_input('Input API key')
 
 def get_st_button_a_tag(url_link, button_name):
     """
@@ -90,6 +84,8 @@ custom_headers = ['User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0
 today = date.today().strftime("%Y-%m-%d")
 
 st.title('IDX Stock Prediction')
+apikey = st.secrets['apikey']
+apikey = st.text_input('Input API key')
 tickerlist = 'https://api.goapi.id/v1/stock/idx/companies?api_key='+apikey
 c.setopt(pycurl.HTTPHEADER, custom_headers)
 c.setopt(pycurl.URL, tickerlist)
@@ -398,9 +394,9 @@ with tab2:
         xref="x3", yref="y3",
         x0=df_date.iloc[0], y0=70,
         x1=today, y1=100,
-        fillcolor="rgba(165, 214, 255, 0.1)",
+        fillcolor="rgba(255, 135, 0, 0.1)",
         line_width=0,
-        line_color="rgba(165, 214, 255, 0.1)"
+        line_color="rgba(255, 135, 0, 0.1)"
     )
     fig3.add_shape(type="rect",
         xref="x3", yref="y3",
@@ -409,6 +405,22 @@ with tab2:
         fillcolor="rgba(255, 135, 0, 0.1)",
         line_width=0,
         line_color="rgba(255, 135, 0, 0.1)"
+    )
+    fig3.add_shape(type="rect",
+        xref="x4", yref="y4",
+        x0=df_date.iloc[0], y0=80,
+        x1=today, y1=100,
+        fillcolor="rgba(255, 209, 106, 0.1)",
+        line_width=0,
+        line_color="rgba(255, 209, 106, 0.1)"
+    )
+    fig3.add_shape(type="rect",
+        xref="x4", yref="y4",
+        x0=df_date.iloc[0], y0=0,
+        x1=today, y1=20,
+        fillcolor="rgba(255, 209, 106, 0.1)",
+        line_width=0,
+        line_color="rgba(255, 209, 106, 0.1)"
     )
     
     st.plotly_chart(fig3)
