@@ -84,8 +84,9 @@ custom_headers = ['User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0
 today = date.today().strftime("%Y-%m-%d")
 
 st.title('IDX Stock Prediction')
-apikey = st.secrets['apikey']
 apikey = st.text_input('Input API key')
+if not apikey:
+    apikey = st.secrets['apikey']
 tickerlist = 'https://api.goapi.id/v1/stock/idx/companies?api_key='+apikey
 c.setopt(pycurl.HTTPHEADER, custom_headers)
 c.setopt(pycurl.URL, tickerlist)
@@ -201,14 +202,12 @@ with st.sidebar:
     except IndexError:
       pass
 
-
 dict1 = dict1["data"]
 dict1 = dict1["results"]
 df_ticker = pd.DataFrame.from_dict(dict1)
 df_ticker = df_ticker[['ticker', 'name']]
 selectlist = df_ticker.values.tolist()
 selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
-
 
 ticker = st.selectbox('Input ticker', selectlist) # type: ignore
 ticker = str(ticker)
