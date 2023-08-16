@@ -168,16 +168,16 @@ with st.sidebar:
         df_loser = df_loser['ticker']
         loserlist = df_loser.values.tolist()
         loserlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in loserlist]
-        st.caption('1. '+loserlist[0])
-        st.caption('2. '+loserlist[1])
-        st.caption('3. '+loserlist[2])
-        st.caption('4. '+loserlist[3])
-        st.caption('5. '+loserlist[4])
-        st.caption('6. '+loserlist[5])
-        st.caption('7. '+loserlist[6])
-        st.caption('8. '+loserlist[7])
-        st.caption('9. '+loserlist[8])
-        st.caption('10. '+loserlist[9])
+        x = 0
+        y = 1
+        while x < 10:
+            z = str(y)
+            if st.button(loserlist[x], key=y):
+                ticker2 = loserlist[x]
+            else:
+                pass
+            x += 1
+            y += 1
     except KeyError:
         pass
 
