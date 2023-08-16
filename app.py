@@ -126,6 +126,43 @@ dictloser = json.loads(dataloser)
 buffer.seek(0)
 buffer.truncate(0)
 
+dict1 = dict1["data"]
+dict1 = dict1["results"]
+df_ticker = pd.DataFrame.from_dict(dict1)
+df_ticker = df_ticker[['ticker', 'name']]
+selectlist = df_ticker.values.tolist()
+selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
+
+ticker = st.selectbox('Input ticker', selectlist) # type: ignore
+ticker = str(ticker)
+ticker = ticker[:4]
+yr2date = date.today() - relativedelta(years=2)
+startdate = st.date_input('Input start date', value=yr2date)
+startdate = str(startdate)
+
+url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
+c.setopt(pycurl.HTTPHEADER, custom_headers)
+c.setopt(pycurl.URL, url)
+c.setopt(pycurl.WRITEDATA, buffer)
+c.setopt(pycurl.CAINFO, certifi.where())
+c.perform()
+c.close()
+
+body = buffer.getvalue()
+data2 = body.decode('iso-8859-1')
+dict = json.loads(data2)
+buffer.seek(0)
+buffer.truncate(0)
+
+dict = dict["data"]
+dict = dict["results"]
+data = pd.DataFrame.from_dict(dict)
+df_train = data[['date', 'close']]
+df_train = df_train.rename(columns={"date": "ds", "close": "y"})
+df_train['floor'] = 0
+
+period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
+
 with st.sidebar:
   tab1, tab2, tab3 = st.tabs(["Gainers", "Losers", "News"])
   with tab1:
@@ -201,43 +238,6 @@ with st.sidebar:
         y = y + 2
     except IndexError:
       pass
-
-dict1 = dict1["data"]
-dict1 = dict1["results"]
-df_ticker = pd.DataFrame.from_dict(dict1)
-df_ticker = df_ticker[['ticker', 'name']]
-selectlist = df_ticker.values.tolist()
-selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
-
-ticker = st.selectbox('Input ticker', selectlist) # type: ignore
-ticker = str(ticker)
-ticker = ticker[:4]
-yr2date = date.today() - relativedelta(years=2)
-startdate = st.date_input('Input start date', value=yr2date)
-startdate = str(startdate)
-
-url = 'https://api.goapi.id/v1/stock/idx/'+ticker+'/historical?from='+startdate+'&to='+today+'&api_key='+apikey
-c.setopt(pycurl.HTTPHEADER, custom_headers)
-c.setopt(pycurl.URL, url)
-c.setopt(pycurl.WRITEDATA, buffer)
-c.setopt(pycurl.CAINFO, certifi.where())
-c.perform()
-c.close()
-
-body = buffer.getvalue()
-data2 = body.decode('iso-8859-1')
-dict = json.loads(data2)
-buffer.seek(0)
-buffer.truncate(0)
-
-dict = dict["data"]
-dict = dict["results"]
-data = pd.DataFrame.from_dict(dict)
-df_train = data[['date', 'close']]
-df_train = df_train.rename(columns={"date": "ds", "close": "y"})
-df_train['floor'] = 0
-
-period = st.slider("How many days ahead?", min_value=1, max_value=1500, value=250)
 
 tab1, tab2 = st.tabs(["Forecasting", "Indicators"])
 with tab1:
