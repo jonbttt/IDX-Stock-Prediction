@@ -133,6 +133,8 @@ df_ticker = df_ticker[['ticker', 'name']]
 selectlist = df_ticker.values.tolist()
 selectlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in selectlist]
 
+ticker2 = "none"
+
 with st.sidebar:
   tab1, tab2, tab3 = st.tabs(["Gainers", "Losers", "News"])
   with tab1:
@@ -211,7 +213,7 @@ with st.sidebar:
 
 ticker = st.selectbox('Input ticker', selectlist) # type: ignore
 ticker = str(ticker)
-if not ticker2: # type: ignore
+if ticker2 == "none":
     pass
 else:
     ticker = ticker2
