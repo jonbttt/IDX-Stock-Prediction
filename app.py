@@ -142,7 +142,7 @@ with st.sidebar:
             y = str(x + 1)
             if st.button(y+'. '+gainerlist[0], key=y):
                 ticker = gainerlist[0]
-                x += 1
+                x = x + 1
             else:
                 pass
             '''
