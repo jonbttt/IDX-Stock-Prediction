@@ -140,7 +140,7 @@ with st.sidebar:
         x = 0
         while x < 10:
             y = str(x + 1)
-            if st.button(y+'. '+gainerlist[0], key=y):
+            if st.button(gainerlist[0], key=y):
                 ticker = gainerlist[0]
                 x = x + 1
             else:
