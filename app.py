@@ -169,9 +169,9 @@ with st.sidebar:
         loserlist = df_loser.values.tolist()
         loserlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in loserlist]
         x = 0
-        y = 1
+        y = 11
         while x < 10:
-            z = str(y)
+            z = str(y - 10)
             if st.button(loserlist[x], key=y):
                 ticker2 = loserlist[x]
             else:
