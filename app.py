@@ -141,8 +141,8 @@ with st.sidebar:
         y = 1
         while x < 10:
             z = str(y)
-            if st.button(gainerlist[0], key=y):
-                ticker = gainerlist[0]
+            if st.button(gainerlist[x], key=y):
+                ticker = gainerlist[x]
             else:
                 pass
             x += 1
