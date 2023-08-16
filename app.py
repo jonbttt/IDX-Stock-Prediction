@@ -138,11 +138,13 @@ with st.sidebar:
         gainerlist = df_gainer.values.tolist()
         gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
         x = 0
+        y = 1
         while x < 10:
-            y = str(x + 1)
+            z = str(y)
             if st.button(gainerlist[0], key=y):
                 ticker = gainerlist[0]
                 x = x + 1
+                y = y + 1
             else:
                 pass
             '''
