@@ -147,16 +147,6 @@ with st.sidebar:
                 pass
             x += 1
             y += 1
-            '''
-        st.caption('2. '+gainerlist[1])
-        st.caption('3. '+gainerlist[2])
-        st.caption('4. '+gainerlist[3])
-        st.caption('5. '+gainerlist[4])
-        st.caption('6. '+gainerlist[5])
-        st.caption('7. '+gainerlist[6])
-        st.caption('8. '+gainerlist[7])
-        st.caption('9. '+gainerlist[8])
-        st.caption('10. '+gainerlist[9])'''
     except KeyError:
         pass
 
