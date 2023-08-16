@@ -143,10 +143,10 @@ with st.sidebar:
             z = str(y)
             if st.button(gainerlist[0], key=y):
                 ticker = gainerlist[0]
-                x = x + 1
-                y = y + 1
             else:
                 pass
+            x += 1
+            y += 1
             '''
         st.caption('2. '+gainerlist[1])
         st.caption('3. '+gainerlist[2])
