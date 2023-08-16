@@ -137,7 +137,15 @@ with st.sidebar:
         df_gainer = df_gainer['ticker']
         gainerlist = df_gainer.values.tolist()
         gainerlist = [re.sub('[^a-zA-Z0-9. ]+', '', str(_)) for _ in gainerlist]
-        st.caption('1. '+gainerlist[0])
+        x = 0
+        while x < 10:
+            y = str(x + 1)
+            if st.button(y+'. '+gainerlist[0]):
+                ticker = gainerlist[0]
+                x += 1
+            else:
+                pass
+            '''
         st.caption('2. '+gainerlist[1])
         st.caption('3. '+gainerlist[2])
         st.caption('4. '+gainerlist[3])
@@ -146,7 +154,7 @@ with st.sidebar:
         st.caption('7. '+gainerlist[6])
         st.caption('8. '+gainerlist[7])
         st.caption('9. '+gainerlist[8])
-        st.caption('10. '+gainerlist[9])
+        st.caption('10. '+gainerlist[9])'''
     except KeyError:
         pass
 
